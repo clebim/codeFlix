@@ -1,0 +1,12 @@
+node_modules
+.git
+.vscode
+.husky
+prettier.config.js
+yarn.lock
+yarn-error.log
+diagram.png
+eslintrc.json
+eslintignore
+editorconfig
+dist
