@@ -1,4 +1,7 @@
 import { Entity } from '@entities/entity';
+import { zonedTimeToUtc } from 'date-fns-tz';
+
+import { getLocalTimeZone } from '@shared/get-local-timezone';
 
 export type CategoryProperties = {
   id?: string;
@@ -16,7 +19,8 @@ export class Category extends Entity<Category> {
       ...props,
       isActive: props.isActive ?? true,
       description: props.description ?? null,
-      createdAt: props.createdAt ?? new Date(),
+      createdAt:
+        props.createdAt ?? zonedTimeToUtc(new Date(), getLocalTimeZone()),
     };
     delete entityProperties.id;
     super(props.id);

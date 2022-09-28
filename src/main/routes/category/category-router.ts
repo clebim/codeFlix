@@ -15,4 +15,13 @@ export default (router: Router): void => {
       ),
     ),
   ]);
+
+  router.get('/private/v1/category', [
+    adapterRouteJson(
+      controllerFactory<Controller>(
+        'ListCategoryController',
+        ContainerVersion.V1,
+      ),
+    ),
+  ]);
 };

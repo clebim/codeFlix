@@ -1,9 +1,7 @@
-/* eslint-disable no-useless-catch */
 import {
-  CreateCategoryRequest,
-  CreateCategoryResponse,
-} from '@usecases/category/create-category-use-case';
-import { CategoryAlreadyExistsError } from '@usecases/errors/category/category-already-exists-error';
+  ListCategoryRequest,
+  ListCategoryResponse,
+} from '@usecases/category/list-category-use-case';
 import { InvalidDataError } from '@usecases/errors/invalid-data-error';
 import { UseCase } from '@usecases/port/use-case';
 import { inject, injectable } from 'tsyringe';
@@ -13,31 +11,27 @@ import { HttpRequest } from '../port/http-request';
 import { HttpResponse } from '../port/http-response';
 
 @injectable()
-export class CreateCategoryController extends Controller {
+export class ListCategoryController extends Controller {
   constructor(
-    @inject('CreateCategoryUseCase')
-    private useCase: UseCase<CreateCategoryRequest, CreateCategoryResponse>,
+    @inject('ListCategoryUseCase')
+    private useCase: UseCase<ListCategoryRequest, ListCategoryResponse>,
   ) {
     super();
   }
 
   public async handle(
-    httpRequest: HttpRequest<CreateCategoryRequest>,
+    httpRequest: HttpRequest<any, ListCategoryRequest>,
   ): Promise<HttpResponse> {
     try {
       const { isFailure, error, data } = await this.useCase.execute(
-        httpRequest.body,
+        httpRequest.query,
       );
 
       if (isFailure && error instanceof InvalidDataError) {
         return this.unprocessableEntity(error);
       }
 
-      if (isFailure && error instanceof CategoryAlreadyExistsError) {
-        return this.conflict(error);
-      }
-
-      return this.created(data);
+      return this.ok({ categories: data });
     } catch (error) {
       return this.serverError('Internal server error');
     }

@@ -19,9 +19,13 @@ export class Logger implements LoggerMethods {
     };
     if (appConfig.TEST !== true) {
       console.error(
-        `[\x1b[31mERROR] ${format(new Date(), 'dd/MM/yyyy HH:mm:ss zzz', {
-          timeZone: this.localTimeZone,
-        })}`,
+        `[\x1b[31mERROR] ${format(
+          new Date().toISOString(),
+          'dd/MM/yyyy HH:mm:ss zzz',
+          {
+            timeZone: this.localTimeZone,
+          },
+        )}`,
         `Error in server \x1b[37m\n`,
         JSON.stringify(fullError, null, 2),
       );
