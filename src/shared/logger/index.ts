@@ -1,5 +1,5 @@
 import { appConfig } from '@main/config';
-import { format } from 'date-fns-tz';
+import { format, utcToZonedTime } from 'date-fns-tz';
 
 export type LoggerMethods = {
   error(error: Error): void;
@@ -20,7 +20,7 @@ export class Logger implements LoggerMethods {
     if (appConfig.TEST !== true) {
       console.error(
         `[\x1b[31mERROR] ${format(new Date(), 'dd/MM/yyyy HH:mm:ss', {
-          timeZone: 'America/Sao_Paulo',
+          timeZone: this.localTimeZone,
         })}`,
         `Error in server \x1b[37m\n`,
         JSON.stringify(fullError, null, 2),
@@ -29,11 +29,16 @@ export class Logger implements LoggerMethods {
   }
 
   info(...logs) {
+    console.log(this.localTimeZone);
     logs.forEach(log =>
       console.info(
-        `[\x1b[34mINFO\x1b[37m] ${format(new Date(), 'dd/MM/yyyy HH:mm:ss', {
-          timeZone: this.localTimeZone,
-        })} - ${log}
+        `[\x1b[34mINFO\x1b[37m] ${format(
+          utcToZonedTime(new Date().toISOString(), this.localTimeZone),
+          'dd/MM/yyyy HH:mm:ss',
+          {
+            timeZone: this.localTimeZone,
+          },
+        )} - ${log}
     `,
       ),
     );

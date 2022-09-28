@@ -35,7 +35,7 @@ export class CreateCategoryController extends Controller {
 
       return this.created(data);
     } catch (error) {
-      throw error;
+      return this.serverError('Internal server error');
     }
   }
 }
