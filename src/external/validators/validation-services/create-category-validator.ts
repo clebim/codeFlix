@@ -1,4 +1,4 @@
-import Joi from '@hapi/joi';
+import Joi from 'joi';
 import { CreateCategoryRequest } from '@usecases/category/create-category-use-case';
 import { RequestValidator } from '@usecases/port/request-validator';
 import { ValidatorResult } from '@usecases/port/validator-result';

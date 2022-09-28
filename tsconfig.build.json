@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": "dist"
+  },
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.mock.ts",
+    "**/*.spec.ts",
+    "**/*.test.ts"
+  ]
+}

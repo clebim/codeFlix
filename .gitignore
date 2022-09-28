@@ -1,4 +1,9 @@
-node_modules/
-target/
+node_modules/*
 yarn-error.log
 yarn.lock
+dist/*
+target/*
+env/.env.dev
+env/.env.prod
+env/.env.test
+*.DS_Store

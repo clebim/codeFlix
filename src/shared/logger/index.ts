@@ -8,7 +8,8 @@ export type LoggerMethods = {
 
 export class Logger implements LoggerMethods {
   private localTimeZone: string =
-    appConfig.LOCALTIMEZONE ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
+    appConfig.LOCAL_TIME_ZONE ??
+    Intl.DateTimeFormat().resolvedOptions().timeZone;
 
   error(error: Error) {
     const fullError = {

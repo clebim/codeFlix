@@ -1,8 +1,21 @@
-version: '3'
+version: '3.7'
+
+networks:
+  codeFlix-network:
+    ipam:
+      config:
+        - subnet: 172.30.0.0/24
 
 services:
   app:
     build: .
     container_name: 'micro-videos-app'
+    command: chmod +x ./home/node/app/entrypoint.sh
+    ports: 
+      - 3333:3333
     volumes:
-      - .:/home/node/app
+      - .:/usr/app
+      - /usr/app/node_modules
+    networks:
+      codeFlix-network:
+        ipv4_address: 172.30.0.8

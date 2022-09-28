@@ -1,10 +1,17 @@
+import env from 'dotenv';
+import path from 'path';
+
 import { envToString } from '@shared/env-to-string';
+
+env.config({ path: path.resolve(`./env/.env.${process.env.NODE_ENV}`) });
+
+process.env.ENVIRONMENT = process.env.ENVIRONMENT || process.env.NODE_ENV;
 
 export const appConfig = {
   TEST: process.env.NODE_ENV === 'test',
   PROD: process.env.NODE_ENV === 'prod',
 
-  LOCALTIMEZONE: process.env.LOCALTIMEZONE,
+  LOCAL_TIME_ZONE: process.env.LOCALTIMEZONE,
 
   SERVER: {
     http: {

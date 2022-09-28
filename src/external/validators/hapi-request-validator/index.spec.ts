@@ -1,4 +1,4 @@
-import Joi, { ObjectSchema } from '@hapi/joi';
+import Joi, { ObjectSchema } from 'joi';
 
 import { HapiValidator } from './index';
 

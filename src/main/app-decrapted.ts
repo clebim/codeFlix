@@ -1,6 +1,7 @@
 import { CreateCategoryController } from '@adapters/controllers/category/create-category-controller';
+import { CategoryRepositoryImpl } from '@external/orm/repositories/category-repository';
 import { CreateCategoryValidator } from '@external/validators/validation-services/create-category-validator';
-import { CreateCategory } from '@usecases/category/create-category-use-case';
+import { CreateCategoryUseCase } from '@usecases/category/create-category-use-case';
 import http, { IncomingMessage, ServerResponse, Server } from 'http';
 
 import { Logger } from '@shared/logger';
@@ -16,7 +17,11 @@ async function createCategory(
   response: ServerResponse,
 ) {
   const controller = new CreateCategoryController(
-    new CreateCategory(new Logger(), new CreateCategoryValidator()),
+    new CreateCategoryUseCase(
+      new Logger(),
+      new CategoryRepositoryImpl(),
+      new CreateCategoryValidator(),
+    ),
   );
   let body = '';
 

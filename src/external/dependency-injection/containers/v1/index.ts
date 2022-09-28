@@ -1,4 +1,5 @@
 import { CreateCategoryController } from '@adapters/controllers/category/create-category-controller';
+import { CategoryRepositoryImpl } from '@external/orm/repositories/category-repository';
 import { CreateCategoryValidator } from '@external/validators/validation-services/create-category-validator';
 import { CreateCategoryUseCase } from '@usecases/category/create-category-use-case';
 
@@ -12,6 +13,9 @@ containerV1.registerSingleton(
   'CreateCategoryController',
   CreateCategoryController,
 );
+
+// REPOSITORIES
+containerV1.registerSingleton('CategoryRepository', CategoryRepositoryImpl);
 
 // VALIDATORS
 

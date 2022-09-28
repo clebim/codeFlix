@@ -1,6 +1,6 @@
-import Joi, { ObjectSchema, ValidationOptions } from '@hapi/joi';
 import { RequestValidator } from '@usecases/port/request-validator';
 import { ValidatorResult } from '@usecases/port/validator-result';
+import Joi, { ObjectSchema, ValidationOptions } from 'joi';
 
 export class HapiValidator<Request> implements RequestValidator<Request> {
   private readonly bodySchema: ObjectSchema<Request>;
