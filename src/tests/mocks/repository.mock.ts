@@ -1,4 +1,4 @@
-import { CategoryRepository } from '@usecases/category/port/category-repostitory';
+import { CategoryRepository } from '@usecases/category/port/category-repository';
 import { mock, MockProxy } from 'jest-mock-extended';
 
 export const categoryRepositoryMock: MockProxy<CategoryRepository> &

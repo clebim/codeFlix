@@ -11,7 +11,7 @@ export const appConfig = {
   TEST: process.env.NODE_ENV === 'test',
   PROD: process.env.NODE_ENV === 'prod',
 
-  LOCAL_TIME_ZONE: process.env.LOCAL_TIME_ZONE,
+  TIMEZONE: process.env.TIMEZONE,
 
   SERVER: {
     http: {

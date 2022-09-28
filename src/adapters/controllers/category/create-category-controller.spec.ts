@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import { makeCategoryMock } from '@tests/mocks/category/category';
 import { createCategoryUseCaseMock } from '@tests/mocks/use-case.mock';
 import { CreateCategoryRequest } from '@usecases/category/create-category-use-case';
+import { CategoryAlreadyExistsError } from '@usecases/errors/category/category-already-exists-error';
 import { InvalidDataError } from '@usecases/errors/invalid-data-error';
 import faker from 'faker';
 import { mockReset } from 'jest-mock-extended';
@@ -40,6 +41,31 @@ describe('Create category controller test', () => {
 
       expect(response.body).toEqual(category);
       expect(response.statusCode).toEqual(201);
+      expect(createCategoryUseCaseMock.execute).toBeCalledTimes(1);
+      expect(createCategoryUseCaseMock.execute).toBeCalledWith(request.body);
+    });
+
+    it('and return a conflict', async () => {
+      const request: HttpRequest<CreateCategoryRequest> = {
+        body: {
+          name: faker.datatype.string(36),
+          description: faker.datatype.string(164),
+        },
+      };
+
+      const useCaseResponse = {
+        isSuccess: false,
+        isFailure: true,
+        error: new CategoryAlreadyExistsError(),
+        data: null,
+      };
+
+      createCategoryUseCaseMock.execute.mockResolvedValue(useCaseResponse);
+
+      const response = await controller.handle(request);
+
+      expect(response.body).toBeTruthy();
+      expect(response.statusCode).toEqual(409);
       expect(createCategoryUseCaseMock.execute).toBeCalledTimes(1);
       expect(createCategoryUseCaseMock.execute).toBeCalledWith(request.body);
     });

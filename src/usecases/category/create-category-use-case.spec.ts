@@ -4,6 +4,7 @@ import { makeCreateCategoryMock } from '@tests/mocks/category/create-category.mo
 import { categoryRepositoryMock } from '@tests/mocks/repository.mock';
 import { loggerMock } from '@tests/mocks/service.mock';
 import { createCategoryValidatorMock } from '@tests/mocks/validator.mock';
+import { CategoryAlreadyExistsError } from '@usecases/errors/category/category-already-exists-error';
 import { InvalidDataError } from '@usecases/errors/invalid-data-error';
 import { UseCase } from '@usecases/port/use-case';
 import faker from 'faker';
@@ -78,6 +79,33 @@ describe('Create category use case test', () => {
         expect(response.error).toBeInstanceOf(InvalidDataError);
         expect(createCategoryValidatorMock.validate).toBeCalledTimes(1);
         expect(createCategoryValidatorMock.validate).toBeCalledWith(request);
+        expect(categoryRepositoryMock.save).toBeCalledTimes(0);
+        expect(response.data).not.toBeTruthy();
+      });
+
+      it('Category already exists in api', async () => {
+        const request = makeCreateCategoryMock();
+        const categoryEntity = new Category(request);
+        const uuid = faker.datatype.uuid();
+
+        jest.useFakeTimers().setSystemTime(new Date());
+        createCategoryValidatorMock.validate.mockReturnValue({
+          isValid: true,
+          value: request,
+        });
+        jest.spyOn(uuidApi, 'v4').mockReturnValue(uuid);
+        categoryRepositoryMock.getUniqueBy.mockResolvedValue(categoryEntity);
+
+        const response = await useCase.execute(request);
+
+        expect(response.isFailure).toBeTruthy();
+        expect(response.error).toBeInstanceOf(CategoryAlreadyExistsError);
+        expect(createCategoryValidatorMock.validate).toBeCalledTimes(1);
+        expect(createCategoryValidatorMock.validate).toBeCalledWith(request);
+        expect(categoryRepositoryMock.getUniqueBy).toBeCalledTimes(1);
+        expect(categoryRepositoryMock.getUniqueBy).toBeCalledWith({
+          name: request.name,
+        });
         expect(categoryRepositoryMock.save).toBeCalledTimes(0);
         expect(response.data).not.toBeTruthy();
       });

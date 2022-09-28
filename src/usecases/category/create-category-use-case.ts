@@ -1,4 +1,5 @@
 import { Category, CategoryProperties } from '@entities/category';
+import { CategoryAlreadyExistsError } from '@usecases/errors/category/category-already-exists-error';
 import { InvalidDataError } from '@usecases/errors/invalid-data-error';
 import { Either } from '@usecases/helpers/either';
 import { RequestValidator } from '@usecases/port/request-validator';
@@ -7,7 +8,7 @@ import { injectable, inject } from 'tsyringe';
 import { LoggerMethods } from '@shared/logger';
 
 import { UseCase } from '../port/use-case';
-import { CategoryRepository } from './port/category-repostitory';
+import { CategoryRepository } from './port/category-repository';
 
 export type CreateCategoryRequest = {
   name: string;
@@ -15,7 +16,7 @@ export type CreateCategoryRequest = {
 };
 
 export type CreateCategoryResponse = Either<
-  InvalidDataError,
+  InvalidDataError | CategoryAlreadyExistsError,
   CategoryProperties
 >;
 
@@ -43,6 +44,14 @@ export class CreateCategoryUseCase extends UseCase<
 
       if (!isValid) {
         return this.left(new InvalidDataError(invalidFields));
+      }
+
+      const categoryAlreadyExists = await this.repository.getUniqueBy({
+        name: request.name,
+      });
+
+      if (categoryAlreadyExists) {
+        return this.left(new CategoryAlreadyExistsError());
       }
 
       const category = new Category(request);
