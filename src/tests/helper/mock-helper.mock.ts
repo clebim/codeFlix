@@ -23,16 +23,31 @@ const transformToObject = (array: any) => {
   );
 };
 
-export const changeValuesMock = <T extends object>(
+export const changeValuesMock = <T>(
   schema: T,
   changes?: object,
   replaceInsideListObject = false,
 ): T => {
   try {
     if (changes) {
+      if (Array.isArray(changes) && Array.isArray(schema)) {
+        const newSchema = schema.map((data: T, index: number) => {
+          return changeValuesMock(
+            data,
+            changes[index],
+            replaceInsideListObject,
+          );
+        });
+
+        return newSchema as T;
+      }
+
       const keysInSchema = extractKeys(changes);
 
       const schemaToArray = Object.entries(schema);
+
+      console.log(keysInSchema);
+      console.log(schemaToArray);
 
       const valueToBeReturned: any = schemaToArray.map(([key, value]) => {
         if (value instanceof Date && valueHasToBeReplaced(key, keysInSchema)) {
