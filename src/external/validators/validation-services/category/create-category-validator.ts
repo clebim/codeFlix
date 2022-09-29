@@ -1,9 +1,9 @@
-import Joi from 'joi';
 import { CreateCategoryRequest } from '@usecases/category/create-category-use-case';
 import { RequestValidator } from '@usecases/port/request-validator';
 import { ValidatorResult } from '@usecases/port/validator-result';
+import Joi from 'joi';
 
-import { HapiValidator } from '../hapi-request-validator';
+import { HapiValidator } from '../../hapi-request-validator';
 
 export class CreateCategoryValidator
   extends HapiValidator<CreateCategoryRequest>

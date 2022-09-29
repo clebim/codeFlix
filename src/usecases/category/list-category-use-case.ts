@@ -29,18 +29,20 @@ export class ListCategoryUseCase extends UseCase<
     @inject('Logger')
     private logger: LoggerMethods,
     @inject('CategoryRepository')
-    private repository: CategoryRepository, // private validator: RequestValidator<ListCategoryRequest>,
+    private repository: CategoryRepository,
+    @inject('ListCategoryValidator')
+    private validator: RequestValidator<ListCategoryRequest>,
   ) {
     super();
   }
 
   async execute(request: ListCategoryRequest): Promise<ListCategoryResponse> {
     try {
-      // const { isValid, invalidFields } = this.validator.validate(request);
-
-      // if (!isValid) {
-      //   return this.left(new InvalidDataError(invalidFields));
-      // }
+      const { isValid, invalidFields } = this.validator.validate(request);
+      this.logger.info(request.createdAt);
+      if (!isValid) {
+        return this.left(new InvalidDataError(invalidFields));
+      }
 
       const categories = await this.repository.listCategory(request);
 

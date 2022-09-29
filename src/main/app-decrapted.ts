@@ -63,7 +63,7 @@ export class App {
     } catch (error) {
       console.log(error);
       response.writeHead(500);
-      response.end('test');
+      response.end('Internal server error');
     }
   }
 }

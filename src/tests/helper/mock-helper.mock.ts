@@ -46,9 +46,6 @@ export const changeValuesMock = <T>(
 
       const schemaToArray = Object.entries(schema);
 
-      console.log(keysInSchema);
-      console.log(schemaToArray);
-
       const valueToBeReturned: any = schemaToArray.map(([key, value]) => {
         if (value instanceof Date && valueHasToBeReplaced(key, keysInSchema)) {
           return [key, (changes as any)[key]];
