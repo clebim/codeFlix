@@ -8,8 +8,11 @@ export class Category {
   @Field()
   name: string;
 
-  @Field()
+  @Field({ nullable: true })
   description: string;
+
+  @Field()
+  isActive: boolean;
 
   @Field()
   createdAt: Date;

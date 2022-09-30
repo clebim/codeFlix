@@ -5,8 +5,14 @@
 
 type Category {
   createdAt: DateTime!
-  description: String!
+  description: String
   id: String!
+  isActive: Boolean!
+  name: String!
+}
+
+input CreateCategoryInput {
+  description: String
   name: String!
 }
 
@@ -15,6 +21,10 @@ The javascript `Date` as string. Type represents date and time as the ISO Date s
 """
 scalar DateTime
 
+type Mutation {
+  createCategory(data: CreateCategoryInput!): Category!
+}
+
 type Query {
-  getCategories: [Category!]!
+  getCategories(createdAt: String, description: String, name: String): [Category!]!
 }

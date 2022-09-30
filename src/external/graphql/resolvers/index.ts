@@ -10,6 +10,7 @@ export class Resolver {
 
   protected injectionTokens = {
     listCategoryController: 'ListCategoryController',
+    createCategoryController: 'CreateCategoryController',
   };
 
   protected getController(injectionToken: string, version: number): Controller {
@@ -36,7 +37,9 @@ export class Resolver {
   }
 
   private unprocessableEntity(message: string) {
-    throw new ApolloError(message, 'VALIDATION-ERROR');
+    const toArrayValues: string[] = Object.values(JSON.parse(message));
+
+    throw new ApolloError(toArrayValues.toString(), 'VALIDATION-ERROR');
   }
 
   private serverError(message: string) {

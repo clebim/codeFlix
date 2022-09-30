@@ -14,6 +14,7 @@ export class Entity<Props extends EntityProperties, Y = string> {
   private checkIfConvertToJSON(value: any): boolean {
     if (
       typeof value === 'object' &&
+      value !== null &&
       !Array.isArray(value) &&
       !(value instanceof Date) &&
       !(value instanceof Error) &&
