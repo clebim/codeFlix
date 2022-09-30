@@ -1,4 +1,5 @@
   Express Application for to post your videos (IN PROGRESS)
+  Also available in graphql (IN PROGRESS)
 </h3>
 
 <p align="center">
