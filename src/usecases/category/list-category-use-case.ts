@@ -39,7 +39,7 @@ export class ListCategoryUseCase extends UseCase<
   async execute(request: ListCategoryRequest): Promise<ListCategoryResponse> {
     try {
       const { isValid, invalidFields } = this.validator.validate(request);
-      this.logger.info(request.createdAt);
+
       if (!isValid) {
         return this.left(new InvalidDataError(invalidFields));
       }

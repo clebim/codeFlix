@@ -12,7 +12,7 @@ export enum ContainerVersion {
   V1 = 1,
 }
 
-export const controllerFactory = <T>(
+export const injectionFactory = <T>(
   injectionToken: string,
   version: number,
 ): T => containerMap[version].resolve<T>(injectionToken);

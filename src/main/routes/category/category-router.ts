@@ -1,7 +1,7 @@
 import { Controller } from '@adapters/controllers';
 import {
   ContainerVersion,
-  controllerFactory,
+  injectionFactory,
 } from '@external/dependency-injection/factory';
 import { adapterRouteJson } from '@external/http/express-route-adapter';
 import { Router } from 'express';
@@ -9,7 +9,7 @@ import { Router } from 'express';
 export default (router: Router): void => {
   router.post('/private/v1/category', [
     adapterRouteJson(
-      controllerFactory<Controller>(
+      injectionFactory<Controller>(
         'CreateCategoryController',
         ContainerVersion.V1,
       ),
@@ -18,7 +18,7 @@ export default (router: Router): void => {
 
   router.get('/private/v1/category', [
     adapterRouteJson(
-      controllerFactory<Controller>(
+      injectionFactory<Controller>(
         'ListCategoryController',
         ContainerVersion.V1,
       ),

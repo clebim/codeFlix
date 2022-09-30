@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES2017",
+    "target": "ES2018",
     "module": "commonjs",
     "outDir": "dist",
     "allowJs": true,
@@ -10,6 +10,7 @@
     "removeComments": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
+    "lib": ["es2018", "esnext.asynciterable"],
     "forceConsistentCasingInFileNames": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,

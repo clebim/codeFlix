@@ -20,7 +20,7 @@ export class Logger implements LoggerMethods {
     if (appConfig.TEST !== true) {
       console.error(
         `[\x1b[31mERROR] ${format(
-          new Date().toISOString(),
+          utcToZonedTime(new Date().toISOString(), this.localTimeZone),
           'dd/MM/yyyy HH:mm:ss zzz',
           {
             timeZone: this.localTimeZone,

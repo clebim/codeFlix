@@ -31,6 +31,8 @@ export class ListCategoryController extends Controller {
         return this.unprocessableEntity(error);
       }
 
+      // return this.conflict(new Error('testes'));
+
       return this.ok({ categories: data });
     } catch (error) {
       return this.serverError('Internal server error');

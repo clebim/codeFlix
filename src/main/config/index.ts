@@ -10,6 +10,7 @@ process.env.ENVIRONMENT = process.env.ENVIRONMENT || process.env.NODE_ENV;
 export const appConfig = {
   TEST: process.env.NODE_ENV === 'test',
   PROD: process.env.NODE_ENV === 'prod',
+  DEV: process.env.NODE_ENV === 'dev',
 
   TIMEZONE: process.env.TIMEZONE,
 

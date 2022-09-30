@@ -1,6 +1,6 @@
 import { IncomingHttpHeaders } from 'http';
 
-export type HttpResponse<T = object> = {
+export type HttpResponse<T = any> = {
   statusCode: number;
   body?: T;
   charset?: string;
