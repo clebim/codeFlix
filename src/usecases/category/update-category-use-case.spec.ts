@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { Category, CategoryProperties } from '@entities/category';
+import { Category } from '@entities/category';
 import { makeCategoryMock } from '@tests/mocks/category/category';
 import { makeUpdateCategoryMock } from '@tests/mocks/category/update-category.mock';
 import { categoryRepositoryMock } from '@tests/mocks/repository.mock';
@@ -40,7 +40,12 @@ describe('Create category use case test', () => {
         name: 'Matheus',
         isActive: true,
       });
-      const entity = new Category(request as CategoryProperties);
+      const entity = new Category({
+        id: request.id,
+        name: request.name,
+        description: request.description,
+        isActive: request.isActive,
+      });
 
       jest.useFakeTimers().setSystemTime(new Date());
       updateCategoryValidatorMock.validate.mockReturnValue({
@@ -78,7 +83,12 @@ describe('Create category use case test', () => {
         name: 'Matheus',
         isActive: false,
       });
-      const entity = new Category(request as CategoryProperties);
+      const entity = new Category({
+        id: request.id,
+        name: request.name,
+        description: request.description,
+        isActive: request.isActive,
+      });
 
       jest.useFakeTimers().setSystemTime(new Date());
       updateCategoryValidatorMock.validate.mockReturnValue({

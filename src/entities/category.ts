@@ -4,11 +4,10 @@ import { zonedTimeToUtc } from 'date-fns-tz';
 import { getLocalTimeZone } from '@shared/get-local-timezone';
 
 export type CategoryProperties = {
-  id?: string;
   name: string;
   isActive?: boolean;
   description?: string;
-  createdAt?: Date;
+  createdAt: Date;
 };
 
 type UpdateCategoryProperties = {
@@ -16,8 +15,18 @@ type UpdateCategoryProperties = {
   description?: string;
 };
 
+export type CategoryConstructorProperties = Omit<
+  CategoryProperties,
+  'createdAt'
+> & {
+  id?: string;
+  createdAt?: Date;
+};
+
 export class Category extends Entity<Category> {
-  constructor(public readonly props: CategoryProperties) {
+  public readonly props: CategoryProperties;
+
+  constructor(props: CategoryConstructorProperties) {
     const entityProperties = {
       ...props,
       isActive: props.isActive ?? true,
@@ -31,7 +40,7 @@ export class Category extends Entity<Category> {
   }
 
   public update(props: UpdateCategoryProperties): void {
-    const body = {
+    const body: Partial<CategoryProperties> = {
       name: props.name ?? this.props.name,
       description: props.description ?? this.props.description,
     };
