@@ -27,14 +27,13 @@ describe('Category Tests', () => {
 
     category.update({
       name: 'Matheus',
-      isActive: false,
       description: 'Some description',
     });
 
     expect(category.props).toStrictEqual({
       name: 'Matheus',
       description: 'Some description',
-      isActive: false,
+      isActive: true,
       createdAt: newDate,
     });
   });

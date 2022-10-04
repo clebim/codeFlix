@@ -11,7 +11,10 @@ export type CategoryProperties = {
   createdAt?: Date;
 };
 
-type UpdateCategoryProperties = Omit<CategoryProperties, 'createdAt'>;
+type UpdateCategoryProperties = {
+  name?: string;
+  description?: string;
+};
 
 export class Category extends Entity<Category> {
   constructor(public readonly props: CategoryProperties) {
@@ -30,7 +33,7 @@ export class Category extends Entity<Category> {
   public update(props: UpdateCategoryProperties): void {
     const body = {
       name: props.name ?? this.props.name,
-      descrption: props.description ?? this.props.description,
+      description: props.description ?? this.props.description,
     };
     Object.assign(this.props, body);
   }
