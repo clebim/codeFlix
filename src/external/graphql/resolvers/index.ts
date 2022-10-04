@@ -6,15 +6,16 @@ import {
 import { ApolloError } from 'apollo-server-express';
 
 export class Resolver {
-  protected containerVersion = ContainerVersion;
+  private containerVersion = ContainerVersion;
 
   protected injectionTokens = {
     listCategoryController: 'ListCategoryController',
     createCategoryController: 'CreateCategoryController',
+    updateCategoryController: 'UpdateCategoryController',
   };
 
-  protected getController(injectionToken: string, version: number): Controller {
-    return injectionFactory(injectionToken, version);
+  protected getControllerV1(injectionToken: string): Controller {
+    return injectionFactory(injectionToken, this.containerVersion.V1);
   }
 
   private errors = {

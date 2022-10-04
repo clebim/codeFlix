@@ -16,6 +16,15 @@ export default (router: Router): void => {
     ),
   ]);
 
+  router.put('/private/v1/category/:id', [
+    adapterRouteJson(
+      injectionFactory<Controller>(
+        'UpdateCategoryController',
+        ContainerVersion.V1,
+      ),
+    ),
+  ]);
+
   router.get('/private/v1/category', [
     adapterRouteJson(
       injectionFactory<Controller>(

@@ -4,7 +4,7 @@ import { NotFoundError } from '@usecases/errors/not-found-error';
 import { Either } from '@usecases/helpers/either';
 import { RequestValidator } from '@usecases/port/request-validator';
 import { UseCase } from '@usecases/port/use-case';
-import { inject } from 'tsyringe';
+import { inject, injectable } from 'tsyringe';
 
 import { LoggerMethods } from '@shared/logger';
 
@@ -22,6 +22,7 @@ export type UpdateCategoryResponse = Either<
   CategoryProperties
 >;
 
+@injectable()
 export class UpdateCategoryUseCase extends UseCase<
   UpdateCategoryRequest,
   UpdateCategoryResponse
@@ -52,7 +53,7 @@ export class UpdateCategoryUseCase extends UseCase<
 
       if (!categoryExists) {
         return this.left(
-          new NotFoundError(`Category with id: ${id} not found in database`),
+          new NotFoundError(`Category with id: ${id} not found in api`),
         );
       }
 

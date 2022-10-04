@@ -23,8 +23,16 @@ scalar DateTime
 
 type Mutation {
   createCategory(data: CreateCategoryInput!): Category!
+  updateCategory(data: UpdateCategoryInput!): Category!
 }
 
 type Query {
   getCategories(createdAt: String, description: String, name: String): [Category!]!
+}
+
+input UpdateCategoryInput {
+  description: String
+  id: String!
+  isActive: Boolean
+  name: String
 }

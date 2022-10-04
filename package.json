@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=dev ts-node-dev -r tsconfig-paths/register --respawn --transpile-only ./src/main/server.ts",
     "start": "NODE_ENV=prod node ./dist/src/main/server.js",
-    "build": "rm -rf dist && tsc && tscpaths -p tsconfig.build.json -s ./src-v2 -o ./dist",
+    "dev:debug": "cross-env NODE_ENV=dev ts-node-dev -r tsconfig-paths/register --respawn --transpile-only ./src/main/server.ts",
+    "build": "rm -rf dist && tsc && tscpaths -p tsconfig.build.json -s ./src -o ./dist",
     "ts-node": "ts-node",
     "test": "cross-env NODE_ENV=test jest --detectOpenHandles --runInBand",
     "prepare": "husky install"

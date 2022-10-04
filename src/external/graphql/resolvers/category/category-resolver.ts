@@ -1,4 +1,5 @@
-import { CreateCategoryInput } from '@external/graphql/dtos/inputs/create-category-input';
+import { CreateCategoryInput } from '@external/graphql/dtos/inputs/category/create-category-input';
+import { UpdateCategoryInput } from '@external/graphql/dtos/inputs/category/update-category-input';
 import { Category } from '@external/graphql/dtos/models/category';
 import { Arg, Mutation, Query, Resolver } from 'type-graphql';
 
@@ -16,9 +17,8 @@ export class CategoryResolver extends ResolverBase {
     @Arg('description', { nullable: true }) description: string,
     @Arg('createdAt', { nullable: true }) createdAt: string,
   ) {
-    const controller = this.getController(
+    const controller = this.getControllerV1(
       this.injectionTokens.listCategoryController,
-      this.containerVersion.V1,
     );
 
     const { body, statusCode } = await controller.handle({
@@ -38,9 +38,8 @@ export class CategoryResolver extends ResolverBase {
 
   @Mutation(() => Category)
   async createCategory(@Arg('data') data: CreateCategoryInput) {
-    const controller = this.getController(
+    const controller = this.getControllerV1(
       this.injectionTokens.createCategoryController,
-      this.containerVersion.V1,
     );
 
     const { body, statusCode } = await controller.handle({
@@ -51,6 +50,30 @@ export class CategoryResolver extends ResolverBase {
     });
 
     if (statusCode !== 201) {
+      this.buildError(statusCode, body.message ?? JSON.stringify(body));
+    }
+
+    return body;
+  }
+
+  @Mutation(() => Category)
+  async updateCategory(@Arg('data') data: UpdateCategoryInput) {
+    const controller = this.getControllerV1(
+      this.injectionTokens.updateCategoryController,
+    );
+
+    const { body, statusCode } = await controller.handle({
+      body: {
+        name: data.name,
+        description: data.description,
+        isActive: data.isActive,
+      },
+      params: {
+        id: data.id,
+      },
+    });
+
+    if (statusCode !== 200) {
       this.buildError(statusCode, body.message ?? JSON.stringify(body));
     }
 

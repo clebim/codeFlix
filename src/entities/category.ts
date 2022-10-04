@@ -28,7 +28,11 @@ export class Category extends Entity<Category> {
   }
 
   public update(props: UpdateCategoryProperties): void {
-    Object.assign(this.props, props);
+    const body = {
+      name: props.name ?? this.props.name,
+      descrption: props.description ?? this.props.description,
+    };
+    Object.assign(this.props, body);
   }
 
   public activate(): void {

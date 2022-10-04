@@ -11,7 +11,16 @@ export class CategoryRepository implements CategoryRepositoryContract {
   private repository: CategoryRepositoryProperties[] = [];
 
   public async save(entity: Category): Promise<Category> {
-    this.repository.push(entity.toDTO());
+    const index = this.repository.findIndex(
+      category => category.id === entity.id,
+    );
+
+    if (index >= 0) {
+      this.repository[index] = entity.toDTO();
+    } else {
+      this.repository.push(entity.toDTO());
+    }
+
     return entity;
   }
 
