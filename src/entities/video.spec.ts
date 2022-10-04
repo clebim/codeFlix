@@ -1,11 +1,11 @@
 import faker from 'faker';
 
 import { Category } from './category';
-import { Video } from './video';
+import { Video, VideoConstructorProperties } from './video';
 
 describe('Video Tests', () => {
   it('Test Constructor of Video', () => {
-    const props = {
+    const props: VideoConstructorProperties = {
       userId: faker.datatype.uuid(),
       title: faker.datatype.string(),
       url: faker.datatype.string(),
@@ -23,6 +23,9 @@ describe('Video Tests', () => {
     expect(video.props).toHaveProperty('title');
     expect(video.props).toHaveProperty('userId');
     expect(video.props).toHaveProperty('url');
+    expect(video.props.public).toBeTruthy();
+    expect(video.props.description).toBeNull();
+    expect(video.props.thumbnail).toBeNull();
     expect(video.props).toHaveProperty('createdAt');
     expect(video.props.categories[0]).toBeInstanceOf(Category);
   });

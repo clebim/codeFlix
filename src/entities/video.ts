@@ -9,6 +9,9 @@ export type VideoProperties = {
   userId: string;
   url: string;
   title: string;
+  description?: string;
+  thumbnail?: string;
+  public: boolean;
   categories: Category[];
   createdAt: Date;
 };
@@ -16,15 +19,18 @@ export type VideoProperties = {
 type UpdateVideoProperties = {
   url?: string;
   title?: string;
+  description?: string;
+  thumbnail?: string;
   categories?: CategoryConstructorProperties[];
 };
 
 export type VideoConstructorProperties = Omit<
   VideoProperties,
-  'categories' | 'createdAt'
+  'categories' | 'createdAt' | 'public'
 > & {
   id?: string;
   categories?: CategoryConstructorProperties[];
+  public?: boolean;
   createdAt?: Date;
 };
 
@@ -34,6 +40,10 @@ export class Video extends Entity<Video> {
   constructor(props: VideoConstructorProperties) {
     const entityProperties = {
       ...props,
+      url: props.url ?? null,
+      public: props.public ?? true,
+      description: props.description ?? null,
+      thumbnail: props.thumbnail ?? null,
       categories: props.categories.map(category => new Category(category)),
       createdAt:
         props.createdAt ?? zonedTimeToUtc(new Date(), getLocalTimeZone()),
@@ -43,10 +53,20 @@ export class Video extends Entity<Video> {
     this.props = entityProperties;
   }
 
+  public putAsPrivate(): void {
+    this.props.public = false;
+  }
+
+  public putAsPublic(): void {
+    this.props.public = true;
+  }
+
   public update(props: UpdateVideoProperties): void {
     const body: Partial<VideoProperties> = {
       title: props.title ?? this.props.title,
       url: props.url ?? this.props.url,
+      description: props.description ?? this.props.description,
+      thumbnail: props.thumbnail ?? this.props.thumbnail,
       categories: props.categories
         ? props.categories.map(category => new Category(category))
         : this.props.categories,
