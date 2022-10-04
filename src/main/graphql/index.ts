@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { CategoryResolver } from '@external/graphql/resolvers/category/category-resolver';
+import { resolvers } from '@external/graphql';
 import { appConfig } from '@main/config';
 import { graphqlInterceptorError } from '@main/middlewares/graphql-interceptor-error';
 import { ApolloServer } from 'apollo-server-express';
@@ -12,7 +12,7 @@ import { Logger } from '@shared/logger';
 const logger = new Logger();
 
 export const schemaOptions: BuildSchemaOptions = {
-  resolvers: [CategoryResolver],
+  resolvers,
   emitSchemaFile: path.resolve(
     __dirname,
     '..',

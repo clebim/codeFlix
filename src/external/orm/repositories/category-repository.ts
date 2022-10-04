@@ -19,11 +19,13 @@ export class CategoryRepository implements CategoryRepositoryContract {
     const category = this.repository.find(
       category =>
         category.name === whereOptions.name ||
-        category.description === whereOptions.description,
+        category.description === whereOptions.description ||
+        category.id === whereOptions.id,
     );
 
     return category ? new Category(category) : undefined;
   }
+
   async listCategory(whereOptions: ListCategoryOptions): Promise<Category[]> {
     const { name, description, createdAt } = whereOptions;
 

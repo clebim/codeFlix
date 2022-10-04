@@ -3,6 +3,7 @@ import { Category } from '@entities/category';
 export type GetUniqueCategoryOptions = {
   name?: string;
   description?: string;
+  id?: string;
 };
 
 export type ListCategoryOptions = {

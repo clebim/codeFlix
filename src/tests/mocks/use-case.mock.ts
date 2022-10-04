@@ -2,6 +2,10 @@ import {
   CreateCategoryRequest,
   CreateCategoryResponse,
 } from '@usecases/category/create-category-use-case';
+import {
+  ListCategoryRequest,
+  ListCategoryResponse,
+} from '@usecases/category/list-category-use-case';
 import { UseCase } from '@usecases/port/use-case';
 import { mock, MockProxy } from 'jest-mock-extended';
 
@@ -10,3 +14,9 @@ export const createCategoryUseCaseMock: MockProxy<
 > &
   UseCase<CreateCategoryRequest, CreateCategoryResponse> =
   mock<UseCase<CreateCategoryRequest, CreateCategoryResponse>>();
+
+export const listCategoryUseCaseMock: MockProxy<
+  UseCase<ListCategoryRequest, ListCategoryResponse>
+> &
+  UseCase<ListCategoryRequest, ListCategoryResponse> =
+  mock<UseCase<ListCategoryRequest, ListCategoryResponse>>();
