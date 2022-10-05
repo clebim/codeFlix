@@ -1,25 +1,23 @@
 import busboy from 'busboy';
 import crypto from 'crypto';
 import { NextFunction, Request, Response } from 'express';
-import { writeFile } from 'fs';
+import { createWriteStream, WriteStream } from 'fs';
 import path from 'path';
-import { promisify } from 'util';
 
 export type FileProps = {
   originalname: string;
   encoding: string;
   fieldname: string;
   mimeType: string;
-  size: number;
 };
 
-type cb = (filename: string) => () => Promise<void>;
+type cb = (filename: string) => () => WriteStream;
 
 export type ExpressStreamOptions = {
   saveInMemory: boolean;
   diskStorage?: {
     destination: string;
-    filename(file: FileProps, callback: cb): () => Promise<void>;
+    filename?(file: FileProps, callback: cb): () => WriteStream;
   };
   streamFunction?(buffer: Buffer): Promise<void>;
 };
@@ -29,7 +27,7 @@ export type File = {
   filePath?: string;
   fieldname: string;
   encoding: string;
-  size: number;
+  size?: number;
   mimeType: string;
   buffer?: Buffer;
 };
@@ -53,13 +51,42 @@ export const ExpressUploadStream =
         });
 
         bb.on('file', (name, file, info) => {
-          const { filename, encoding, mimeType } = info;
+          const { filename: originalName, encoding, mimeType } = info;
           const chunks = [];
+
+          if (options?.diskStorage) {
+            let stream: WriteStream;
+            if (typeof filename === 'function') {
+              const callback = filename(
+                {
+                  encoding,
+                  originalname: originalName,
+                  fieldname: name,
+                  mimeType,
+                },
+                (filename: string) => () => {
+                  return createWriteStream(path.join(pathToSave, filename));
+                },
+              );
+
+              stream = callback();
+            } else {
+              stream = createWriteStream(
+                path.join(
+                  pathToSave,
+                  `${crypto.randomBytes(12).toString('hex')}-${originalName}`,
+                ),
+              );
+            }
+
+            file.pipe(stream);
+          }
 
           file.on('data', async data => {
             const buffer = data instanceof Buffer ? data : Buffer.from(data);
-            chunks.push(buffer);
-            console.log(chunks.length);
+            if (saveInMemory) {
+              chunks.push(buffer);
+            }
             if (typeof streamFunction === 'function') {
               await streamFunction(buffer);
             }
@@ -68,15 +95,14 @@ export const ExpressUploadStream =
           file.on('end', () => {
             files.push({
               fieldname: name,
-              filename,
+              filename: originalName,
               encoding,
               mimeType,
-              size: Buffer.byteLength(Buffer.concat(chunks)),
+              size: saveInMemory
+                ? Buffer.byteLength(Buffer.concat(chunks))
+                : undefined,
               filePath: pathToSave ? `${pathToSave}${filename}` : undefined,
-              buffer:
-                saveInMemory || !!pathToSave
-                  ? Buffer.concat(chunks)
-                  : undefined,
+              buffer: saveInMemory ? Buffer.concat(chunks) : undefined,
             });
           });
 
@@ -90,39 +116,6 @@ export const ExpressUploadStream =
         });
         request.pipe(bb);
       });
-
-      if (options.diskStorage) {
-        const writeFileSync = promisify(writeFile);
-        files.forEach(async file => {
-          if (filename) {
-            const callback = filename(
-              {
-                encoding: file.encoding,
-                originalname: file.filename,
-                fieldname: file.fieldname,
-                mimeType: file.mimeType,
-                size: file.size,
-              },
-              (filename: string) => () => {
-                return writeFileSync(
-                  path.join(pathToSave, filename),
-                  file.buffer,
-                );
-              },
-            );
-
-            await callback();
-          } else {
-            await writeFileSync(
-              path.join(
-                pathToSave,
-                `${crypto.randomBytes(12).toString('hex')}-${file.filename}`,
-              ),
-              file.buffer,
-            );
-          }
-        });
-      }
 
       request.body = body;
       request.file = files.length === 1 ? files[0] : undefined;

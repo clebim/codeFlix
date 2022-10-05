@@ -3,6 +3,7 @@ type File = {
   filePath?: string;
   fieldname: string;
   encoding: string;
+  size?: number;
   mimeType: string;
   buffer?: Buffer;
 };
