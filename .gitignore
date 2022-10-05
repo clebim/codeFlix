@@ -7,3 +7,5 @@ env/.env.dev
 env/.env.prod
 env/.env.test
 *.DS_Store
+tmp/*
+!tmp/.gitkeep
