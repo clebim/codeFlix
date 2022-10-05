@@ -8,7 +8,7 @@ describe('Video Tests', () => {
     const props: VideoConstructorProperties = {
       userId: faker.datatype.uuid(),
       title: faker.datatype.string(),
-      url: faker.datatype.string(),
+      filename: faker.datatype.string(),
       categories: [
         {
           id: faker.datatype.uuid(),
@@ -22,7 +22,7 @@ describe('Video Tests', () => {
     expect(video.id).toBeTruthy();
     expect(video.props).toHaveProperty('title');
     expect(video.props).toHaveProperty('userId');
-    expect(video.props).toHaveProperty('url');
+    expect(video.props).toHaveProperty('filename');
     expect(video.props.public).toBeTruthy();
     expect(video.props.description).toBeNull();
     expect(video.props.thumbnail).toBeNull();
@@ -34,7 +34,7 @@ describe('Video Tests', () => {
     const props = {
       userId: faker.datatype.uuid(),
       title: faker.datatype.string(),
-      url: faker.datatype.string(),
+      filename: faker.datatype.string(),
       categories: [
         {
           id: faker.datatype.uuid(),
@@ -47,10 +47,10 @@ describe('Video Tests', () => {
 
     video.update({
       title: 'Titulo',
-      url: 'Teste',
+      filename: 'Teste',
     });
 
     expect(video.props.title).toEqual('Titulo');
-    expect(video.props.url).toEqual('Teste');
+    expect(video.props.filename).toEqual('Teste');
   });
 });

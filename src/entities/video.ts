@@ -2,12 +2,16 @@ import { zonedTimeToUtc } from 'date-fns-tz';
 
 import { getLocalTimeZone } from '@shared/get-local-timezone';
 
-import { Category, CategoryConstructorProperties } from './category';
+import {
+  Category,
+  CategoryConstructorProperties,
+  CategoryProperties,
+} from './category';
 import { Entity } from './entity';
 
 export type VideoProperties = {
   userId: string;
-  url: string;
+  filename: string;
   title: string;
   description?: string;
   thumbnail?: string;
@@ -16,8 +20,12 @@ export type VideoProperties = {
   createdAt: Date;
 };
 
+export type VideoPlainProperties = Omit<VideoProperties, 'categories'> & {
+  categories: CategoryProperties[];
+};
+
 type UpdateVideoProperties = {
-  url?: string;
+  filename?: string;
   title?: string;
   description?: string;
   thumbnail?: string;
@@ -40,7 +48,7 @@ export class Video extends Entity<Video> {
   constructor(props: VideoConstructorProperties) {
     const entityProperties = {
       ...props,
-      url: props.url ?? null,
+      filename: props.filename ?? null,
       public: props.public ?? true,
       description: props.description ?? null,
       thumbnail: props.thumbnail ?? null,
@@ -64,7 +72,7 @@ export class Video extends Entity<Video> {
   public update(props: UpdateVideoProperties): void {
     const body: Partial<VideoProperties> = {
       title: props.title ?? this.props.title,
-      url: props.url ?? this.props.url,
+      filename: props.filename ?? this.props.filename,
       description: props.description ?? this.props.description,
       thumbnail: props.thumbnail ?? this.props.thumbnail,
       categories: props.categories
@@ -75,6 +83,6 @@ export class Video extends Entity<Video> {
   }
 
   public toDTO() {
-    return this.classToPlain<VideoProperties>(this);
+    return this.classToPlain<VideoPlainProperties>(this);
   }
 }

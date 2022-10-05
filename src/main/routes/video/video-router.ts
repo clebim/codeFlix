@@ -20,7 +20,7 @@ const uploadOptions: ExpressStreamOptions = {
 };
 
 export default (router: Router): void => {
-  router.post('/teste', [
+  router.post('/private/v1/video', [
     ExpressUploadStream(uploadOptions),
     async (req: Request, res: Response) => {
       console.log(req.files);
