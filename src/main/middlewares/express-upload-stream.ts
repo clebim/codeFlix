@@ -5,6 +5,8 @@ import { createWriteStream, WriteStream } from 'fs';
 import path from 'path';
 import internal from 'stream';
 
+import { Logger } from '@shared/logger';
+
 export type FileProps = {
   originalname: string;
   encoding: string;
@@ -41,6 +43,7 @@ export type File = {
 export const ExpressUploadStream =
   (options?: ExpressStreamOptions) =>
   async (request: Request, response: Response, next: NextFunction) => {
+    const logger = new Logger();
     try {
       const body = {};
       const saveInMemory = options?.saveInMemory ?? true;
@@ -111,7 +114,9 @@ export const ExpressUploadStream =
               size: saveInMemory
                 ? Buffer.byteLength(Buffer.concat(chunks))
                 : undefined,
-              filePath: pathToSave ? `${pathToSave}${filename}` : undefined,
+              filePath: pathToSave
+                ? `${pathToSave}${finalFilename}`
+                : undefined,
               buffer: saveInMemory ? Buffer.concat(chunks) : undefined,
             });
           });
@@ -132,6 +137,7 @@ export const ExpressUploadStream =
       request.files = files.length > 1 ? files : undefined;
       next();
     } catch (error) {
+      logger.error(error);
       next(error);
     }
   };

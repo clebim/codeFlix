@@ -23,6 +23,7 @@ export default (router: Router): void => {
   router.post('/teste', [
     ExpressUploadStream(uploadOptions),
     async (req: Request, res: Response) => {
+      console.log(req.files);
       return res.sendStatus(200);
     },
   ]);

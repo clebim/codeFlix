@@ -10,27 +10,37 @@ import {
 } from '@main/middlewares/express-upload-stream';
 import crypto from 'crypto';
 
-export const streamFile = (file: FileProps): ReturnStream => {
-  const storageService = injectionFactory<GoogleStorageService>(
-    'GoogleStorageService',
-    ContainerVersion.DEFAULT,
-  );
+import { Logger } from '@shared/logger';
 
-  const bucket = storageService
-    .getGoogleStorage()
-    .bucket(appConfig.STORAGE.google.videoBucket);
+export const streamFileAdapter = async (
+  file: FileProps,
+): Promise<ReturnStream> => {
+  const logger = new Logger();
+  try {
+    const storageService = injectionFactory<GoogleStorageService>(
+      'GoogleStorageService',
+      ContainerVersion.DEFAULT,
+    );
 
-  const filename = `videos/${crypto.randomBytes(12).toString('hex')}-${
-    file.originalname
-  }`;
-  const blob = bucket.file(filename);
-  const stream = blob.createWriteStream({
-    resumable: true,
-    contentType: file.mimeType,
-  });
+    const bucket = storageService
+      .getGoogleStorage()
+      .bucket(appConfig.STORAGE.google.videoBucket);
 
-  return {
-    stream,
-    filename,
-  };
+    const filename = `videos/${crypto.randomBytes(12).toString('hex')}-${
+      file.originalname
+    }`;
+    const blob = bucket.file(filename);
+    const stream = blob.createWriteStream({
+      resumable: true,
+      contentType: file.mimeType,
+    });
+
+    return {
+      stream,
+      filename,
+    };
+  } catch (error) {
+    logger.error(error);
+    throw error;
+  }
 };
