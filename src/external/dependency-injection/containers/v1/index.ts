@@ -1,7 +1,6 @@
 import { CreateCategoryController } from '@adapters/controllers/category/create-category-controller';
 import { ListCategoryController } from '@adapters/controllers/category/list-category-controller';
 import { UpdateCategoryController } from '@adapters/controllers/category/update-category-controller';
-import { CategoryRepository } from '@external/orm/repositories/category-repository';
 import { CreateCategoryValidator } from '@external/validators/validation-services/category/create-category-validator';
 import { ListCategoryValidator } from '@external/validators/validation-services/category/list-category-validator';
 import { UpdateCategoryValidator } from '@external/validators/validation-services/category/update-category-validator';
@@ -27,11 +26,7 @@ containerV1.registerSingleton(
   UpdateCategoryController,
 );
 
-// REPOSITORIES
-containerV1.registerSingleton('CategoryRepository', CategoryRepository);
-
 // VALIDATORS
-
 containerV1.registerSingleton(
   'CreateCategoryValidator',
   CreateCategoryValidator,

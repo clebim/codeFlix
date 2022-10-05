@@ -20,5 +20,9 @@ declare namespace NodeJS {
     APP_SECRET?: string;
     EXPIRES_IN?: string;
     SUPPORT_MAIL?: string;
+    GOOGLE_CLOUD_PROJECT_ID?: string;
+    GOOGLE_CLOUD_PRIVATE_KEY?: string;
+    GOOGLE_GLOUD_ACCOUNT_EMAIL?: string;
+    STORAGE_VIDEO_BUCKET?: string;
   }
 }

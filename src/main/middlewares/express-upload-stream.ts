@@ -3,6 +3,7 @@ import crypto from 'crypto';
 import { NextFunction, Request, Response } from 'express';
 import { createWriteStream, WriteStream } from 'fs';
 import path from 'path';
+import internal from 'stream';
 
 export type FileProps = {
   originalname: string;
@@ -13,13 +14,18 @@ export type FileProps = {
 
 type cb = (filename: string) => () => WriteStream;
 
+export type ReturnStream = {
+  stream: internal.Writable | WriteStream;
+  filename: string;
+};
+
 export type ExpressStreamOptions = {
   saveInMemory: boolean;
   diskStorage?: {
     destination: string;
     filename?(file: FileProps, callback: cb): () => WriteStream;
   };
-  streamFunction?(buffer: Buffer): Promise<void>;
+  stream?(file: FileProps): Promise<ReturnStream>;
 };
 
 export type File = {
@@ -40,7 +46,7 @@ export const ExpressUploadStream =
       const saveInMemory = options?.saveInMemory ?? true;
       const pathToSave = options?.diskStorage?.destination ?? undefined;
       const files: File[] = [];
-      const streamFunction = options?.streamFunction ?? undefined;
+      const streamParameter = options?.stream ?? undefined;
       const filename = options?.diskStorage?.filename ?? undefined;
 
       const bb = busboy({ headers: request.headers });
@@ -50,24 +56,31 @@ export const ExpressUploadStream =
           Object.assign(body, { [name]: val });
         });
 
-        bb.on('file', (name, file, info) => {
+        bb.on('file', async (name, file, info) => {
           const { filename: originalName, encoding, mimeType } = info;
+          let finalFilename = originalName;
           const chunks = [];
+          const fileProps = {
+            encoding,
+            originalname: originalName,
+            fieldname: name,
+            mimeType,
+          };
+
+          if (typeof streamParameter === 'function') {
+            const { stream: returnedStream, filename: externalFilename } =
+              await streamParameter(fileProps);
+            finalFilename = externalFilename;
+            file.pipe(returnedStream);
+          }
 
           if (options?.diskStorage) {
             let stream: WriteStream;
             if (typeof filename === 'function') {
-              const callback = filename(
-                {
-                  encoding,
-                  originalname: originalName,
-                  fieldname: name,
-                  mimeType,
-                },
-                (filename: string) => () => {
-                  return createWriteStream(path.join(pathToSave, filename));
-                },
-              );
+              const callback = filename(fileProps, (filename: string) => () => {
+                finalFilename = filename;
+                return createWriteStream(path.join(pathToSave, finalFilename));
+              });
 
               stream = callback();
             } else {
@@ -87,15 +100,12 @@ export const ExpressUploadStream =
             if (saveInMemory) {
               chunks.push(buffer);
             }
-            if (typeof streamFunction === 'function') {
-              await streamFunction(buffer);
-            }
           });
 
           file.on('end', () => {
             files.push({
               fieldname: name,
-              filename: originalName,
+              filename: finalFilename,
               encoding,
               mimeType,
               size: saveInMemory

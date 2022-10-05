@@ -22,7 +22,7 @@ const uploadOptions: ExpressStreamOptions = {
 export default (router: Router): void => {
   router.post('/teste', [
     ExpressUploadStream(uploadOptions),
-    (req: Request, res: Response) => {
+    async (req: Request, res: Response) => {
       return res.sendStatus(200);
     },
   ]);
