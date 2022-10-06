@@ -1,4 +1,4 @@
-import { Category, CategoryProperties } from '@entities/category';
+import { Category } from '@entities/category';
 import {
   CategoryRepository as CategoryRepositoryContract,
   GetUniqueCategoryOptions,
