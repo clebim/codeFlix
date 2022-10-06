@@ -7,6 +7,7 @@ export type GetUniqueCategoryOptions = {
 };
 
 export type ListCategoryOptions = {
+  id?: string | string[];
   name?: string;
   description?: string;
   createdAt?: Date;

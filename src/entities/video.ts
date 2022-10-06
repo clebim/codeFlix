@@ -16,6 +16,7 @@ export type VideoProperties = {
   description?: string;
   thumbnail?: string;
   public: boolean;
+  likes: number;
   categories: Category[];
   createdAt: Date;
 };
@@ -34,11 +35,12 @@ type UpdateVideoProperties = {
 
 export type VideoConstructorProperties = Omit<
   VideoProperties,
-  'categories' | 'createdAt' | 'public'
+  'categories' | 'createdAt' | 'public' | 'likes'
 > & {
   id?: string;
   categories?: CategoryConstructorProperties[];
   public?: boolean;
+  likes?: number;
   createdAt?: Date;
 };
 
@@ -52,6 +54,7 @@ export class Video extends Entity<Video> {
       public: props.public ?? true,
       description: props.description ?? null,
       thumbnail: props.thumbnail ?? null,
+      likes: props.likes ?? 0,
       categories: props.categories.map(category => new Category(category)),
       createdAt:
         props.createdAt ?? zonedTimeToUtc(new Date(), getLocalTimeZone()),
@@ -63,6 +66,14 @@ export class Video extends Entity<Video> {
 
   public putAsPrivate(): void {
     this.props.public = false;
+  }
+
+  public addLike(): void {
+    this.props.likes += 1;
+  }
+
+  public removeLike(): void {
+    this.props.likes -= 1;
   }
 
   public putAsPublic(): void {

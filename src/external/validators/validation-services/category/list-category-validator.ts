@@ -13,6 +13,7 @@ export class ListCategoryValidator
       name: Joi.string().optional().max(256),
       description: Joi.string().optional(),
       createdAt: Joi.date().iso().less('now').optional(),
+      id: Joi.alternatives().try(Joi.array().items(Joi.string()), Joi.string()),
     }).required();
 
     super(requestSchema);

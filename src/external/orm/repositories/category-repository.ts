@@ -4,97 +4,60 @@ import {
   GetUniqueCategoryOptions,
   ListCategoryOptions,
 } from '@usecases/category/port/category-repository';
+import { Repository } from 'typeorm';
 
-type CategoryRepositoryProperties = CategoryProperties & { id: string };
+import { datasource } from '../index';
+import { CategorySchema } from '../schemas/category';
 
 export class CategoryRepository implements CategoryRepositoryContract {
-  private repository: CategoryRepositoryProperties[] = [];
+  private repository: Repository<CategorySchema>;
+
+  constructor() {
+    this.repository = datasource.getRepository(CategorySchema);
+  }
 
   public async save(entity: Category): Promise<Category> {
-    const index = this.repository.findIndex(
-      category => category.id === entity.id,
-    );
-
-    if (index >= 0) {
-      this.repository[index] = entity.toDTO();
-    } else {
-      this.repository.push(entity.toDTO());
-    }
+    await this.repository.save(entity.toDTO());
 
     return entity;
   }
 
   async getUniqueBy(whereOptions: GetUniqueCategoryOptions): Promise<Category> {
-    const category = this.repository.find(
-      category =>
-        category.name === whereOptions.name ||
-        category.description === whereOptions.description ||
-        category.id === whereOptions.id,
-    );
+    const category = await this.repository.findOneBy(whereOptions);
 
     return category ? new Category(category) : undefined;
   }
 
   async listCategory(whereOptions: ListCategoryOptions): Promise<Category[]> {
-    const { name, description, createdAt } = whereOptions;
+    const { name, description, createdAt, id } = whereOptions;
 
-    const categories = this.repository.filter(category => {
-      if (
-        name &&
-        description &&
-        name === category.name &&
-        description === category.description &&
-        createdAt &&
-        createdAt === category.createdAt
-      ) {
-        return true;
+    const queryBuilder = await this.repository
+      .createQueryBuilder('category')
+      .where('category.id is not null');
+
+    if (id) {
+      if (Array.isArray(id)) {
+        queryBuilder.andWhereInIds(id);
+      } else {
+        queryBuilder.andWhere('category.id = :id', { id });
       }
+    }
 
-      if (
-        name &&
-        name === category.name &&
-        createdAt &&
-        createdAt === category.createdAt
-      ) {
-        return true;
-      }
+    if (name) {
+      queryBuilder.andWhere('category.name like :name', { name: `%${name}%` });
+    }
 
-      if (
-        description &&
-        description === category.description &&
-        createdAt &&
-        createdAt === category.createdAt
-      ) {
-        return true;
-      }
+    if (description) {
+      queryBuilder.andWhere('category.description like :description', {
+        description: `%${description}%`,
+      });
+    }
 
-      if (
-        name &&
-        description &&
-        name === category.name &&
-        description === category.description
-      ) {
-        return true;
-      }
+    if (createdAt) {
+      queryBuilder.andWhere('category.createdAt = :createdAt', { createdAt });
+    }
 
-      if (name && name === category.name) {
-        return true;
-      }
-
-      if (description && description === category.description) {
-        return true;
-      }
-
-      if (createdAt && createdAt === category.createdAt) {
-        return true;
-      }
-
-      if (!name && !description && !createdAt) {
-        return true;
-      }
-
-      return false;
-    });
+    const categories = await queryBuilder.getMany();
 
     return categories.map(category => new Category(category));
   }

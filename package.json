@@ -10,7 +10,11 @@
     "build": "rm -rf dist && tsc && tscpaths -p tsconfig.build.json -s ./src -o ./dist",
     "ts-node": "ts-node",
     "test": "cross-env NODE_ENV=test jest --detectOpenHandles --runInBand",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "migration:run:dev": "cross-env NODE_ENV=dev yarn run typeorm migration:run -d src/external/orm/index.ts",
+    "migration:generate": "cross-env NODE_ENV=dev yarn typeorm migration:generate src/external/orm/migrations/$NAME -d src/external/orm/index.ts",
+    "migration:create": "cross-env NODE_ENV=dev yarn typeorm migration:create src/external/orm/migrations/$NAME",
+    "typeorm": "ts-node-dev -r tsconfig-paths/register node_modules/typeorm/cli.js"
   },
   "keywords": [],
   "author": "Matheus Cleber Silva Guerra",
@@ -57,9 +61,11 @@
     "express": "^4.18.1",
     "graphql": "^15.8.0",
     "joi": "^17.6.1",
+    "pg": "^8.8.0",
     "reflect-metadata": "^0.1.13",
     "tsyringe": "^4.7.0",
     "type-graphql": "^1.1.1",
+    "typeorm": "^0.3.10",
     "uuid": "^9.0.0"
   }
 }

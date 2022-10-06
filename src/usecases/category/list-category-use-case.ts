@@ -11,6 +11,7 @@ import { CategoryRepository } from './port/category-repository';
 
 export type ListCategoryRequest = {
   name?: string;
+  id?: string | string[];
   description?: string;
   createdAt?: Date;
 };
