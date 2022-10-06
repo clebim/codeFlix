@@ -10,6 +10,7 @@ export type ListCategoryOptions = {
   id?: string | string[];
   name?: string;
   description?: string;
+  isActive?: boolean;
   createdAt?: Date;
 };
 export interface CategoryRepository {

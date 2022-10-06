@@ -29,7 +29,7 @@ export class CategoryRepository implements CategoryRepositoryContract {
   }
 
   async listCategory(whereOptions: ListCategoryOptions): Promise<Category[]> {
-    const { name, description, createdAt, id } = whereOptions;
+    const { name, description, createdAt, id, isActive } = whereOptions;
 
     const queryBuilder = await this.repository
       .createQueryBuilder('category')
@@ -51,6 +51,10 @@ export class CategoryRepository implements CategoryRepositoryContract {
       queryBuilder.andWhere('category.description like :description', {
         description: `%${description}%`,
       });
+    }
+
+    if (isActive) {
+      queryBuilder.andWhere('category.isActive = :isActive', { isActive });
     }
 
     if (createdAt) {

@@ -57,12 +57,9 @@ export class CreateVideoUseCase extends UseCase<
         categories = await this.categoryRepository
           .listCategory({
             id: request.categoriesId,
+            isActive: true,
           })
-          .then(data =>
-            data
-              .map(category => category.toDTO())
-              .filter(category => category.isActive === true),
-          );
+          .then(data => data.map(category => category.toDTO()));
       }
 
       const newVideo = new Video({
