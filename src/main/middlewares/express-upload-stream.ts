@@ -1,6 +1,6 @@
 import busboy from 'busboy';
 import crypto from 'crypto';
-import { NextFunction, Request, Response } from 'express';
+import e, { NextFunction, Request, Response } from 'express';
 import { createWriteStream, WriteStream } from 'fs';
 import path from 'path';
 import internal from 'stream';
@@ -44,92 +44,118 @@ export const ExpressUploadStream =
   (options?: ExpressStreamOptions) =>
   async (request: Request, response: Response, next: NextFunction) => {
     const logger = new Logger();
+    const body = {};
+    const saveInMemory = options?.saveInMemory ?? true;
+    const pathToSave = options?.diskStorage?.destination ?? undefined;
+    const files: File[] = [];
+    const streamParameter = options?.stream ?? undefined;
+    const filename = options?.diskStorage?.filename ?? undefined;
+
+    const bb = busboy({ headers: request.headers });
     try {
-      const body = {};
-      const saveInMemory = options?.saveInMemory ?? true;
-      const pathToSave = options?.diskStorage?.destination ?? undefined;
-      const files: File[] = [];
-      const streamParameter = options?.stream ?? undefined;
-      const filename = options?.diskStorage?.filename ?? undefined;
-
-      const bb = busboy({ headers: request.headers });
-
       await new Promise((resolve, reject) => {
-        bb.on('field', (name, val) => {
-          Object.assign(body, { [name]: val });
-        });
-
-        bb.on('file', async (name, file, info) => {
-          const { filename: originalName, encoding, mimeType } = info;
-          let finalFilename = originalName;
-          const chunks = [];
-          const fileProps = {
-            encoding,
-            originalname: originalName,
-            fieldname: name,
-            mimeType,
-          };
-
-          if (typeof streamParameter === 'function') {
-            const { stream: returnedStream, filename: externalFilename } =
-              await streamParameter(fileProps);
-            finalFilename = externalFilename;
-            file.pipe(returnedStream);
-          }
-
-          if (options?.diskStorage) {
-            let stream: WriteStream;
-            if (typeof filename === 'function') {
-              const callback = filename(fileProps, (filename: string) => () => {
-                finalFilename = filename;
-                return createWriteStream(path.join(pathToSave, finalFilename));
-              });
-
-              stream = callback();
+        try {
+          bb.on('field', (name, val) => {
+            if (Object.keys(body).includes(name)) {
+              if (Array.isArray(body[name])) {
+                Object.assign(body, { [name]: body[name].concat(val) });
+              } else {
+                Object.assign(body, { [name]: [val, body[name]] });
+              }
             } else {
-              stream = createWriteStream(
-                path.join(
-                  pathToSave,
-                  `${crypto.randomBytes(12).toString('hex')}-${originalName}`,
-                ),
-              );
-            }
-
-            file.pipe(stream);
-          }
-
-          file.on('data', async data => {
-            const buffer = data instanceof Buffer ? data : Buffer.from(data);
-            if (saveInMemory) {
-              chunks.push(buffer);
+              Object.assign(body, { [name]: val });
             }
           });
 
-          file.on('end', () => {
-            files.push({
-              fieldname: name,
-              filename: finalFilename,
+          bb.on('file', async (name, file, info) => {
+            const { filename: originalName, encoding, mimeType } = info;
+            let finalFilename = originalName;
+            const chunks = [];
+            const fileProps = {
               encoding,
+              originalname: originalName,
+              fieldname: name,
               mimeType,
-              size: saveInMemory
-                ? Buffer.byteLength(Buffer.concat(chunks))
-                : undefined,
-              filePath: pathToSave
-                ? `${pathToSave}${finalFilename}`
-                : undefined,
-              buffer: saveInMemory ? Buffer.concat(chunks) : undefined,
+            };
+
+            if (typeof streamParameter === 'function') {
+              try {
+                const { stream: returnedStream, filename: externalFilename } =
+                  await streamParameter(fileProps);
+                finalFilename = externalFilename;
+                file.pipe(returnedStream);
+              } catch (error) {
+                reject(error);
+              }
+            }
+
+            if (options?.diskStorage) {
+              try {
+                let stream: WriteStream;
+                if (typeof filename === 'function') {
+                  const callback = filename(
+                    fileProps,
+                    (filename: string) => () => {
+                      finalFilename = filename;
+                      return createWriteStream(
+                        path.join(pathToSave, finalFilename),
+                      );
+                    },
+                  );
+
+                  stream = callback();
+                } else {
+                  stream = createWriteStream(
+                    path.join(
+                      pathToSave,
+                      `${crypto
+                        .randomBytes(12)
+                        .toString('hex')}-${originalName}`,
+                    ),
+                  );
+                }
+
+                file.pipe(stream);
+              } catch (error) {
+                reject(error);
+              }
+            }
+
+            file.on('data', async data => {
+              const buffer = data instanceof Buffer ? data : Buffer.from(data);
+              if (saveInMemory) {
+                chunks.push(buffer);
+              }
+            });
+
+            file.on('end', () => {
+              files.push({
+                fieldname: name,
+                filename: finalFilename,
+                encoding,
+                mimeType,
+                size: saveInMemory
+                  ? Buffer.byteLength(Buffer.concat(chunks))
+                  : undefined,
+                filePath: pathToSave
+                  ? `${pathToSave}${finalFilename}`
+                  : undefined,
+                buffer: saveInMemory ? Buffer.concat(chunks) : undefined,
+              });
+            });
+
+            bb.on('error', error => {
+              return reject(error);
+            });
+
+            bb.on('close', () => {
+              return resolve(true);
             });
           });
-
-          bb.on('error', error => {
-            return reject(error);
-          });
-
-          bb.on('close', () => {
-            return resolve(true);
-          });
-        });
-        request.pipe(bb);
+          request.pipe(bb);
+        } catch (error) {
+          reject(error);
+        }
       });
 
       request.body = body;

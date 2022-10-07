@@ -26,9 +26,24 @@ export const streamFileAdapter = async (
       .getGoogleStorage()
       .bucket(appConfig.STORAGE.google.videoBucket);
 
-    const filename = `videos/${crypto.randomBytes(12).toString('hex')}-${
-      file.originalname
-    }`;
+    let filename = '';
+
+    if (file.fieldname === 'thumbnail') {
+      filename = `thumbnails/${crypto.randomBytes(12).toString('hex')}-${
+        file.originalname
+      }`;
+    }
+
+    if (file.fieldname === 'video') {
+      filename = `videos/${crypto.randomBytes(12).toString('hex')}-${
+        file.originalname
+      }`;
+    }
+
+    if (filename.length === 0) {
+      throw new Error('invalid file when creating a video');
+    }
+
     const blob = bucket.file(filename);
     const stream = blob.createWriteStream({
       resumable: true,

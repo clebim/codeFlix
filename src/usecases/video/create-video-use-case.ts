@@ -33,9 +33,9 @@ export class CreateVideoUseCase extends UseCase<
   constructor(
     @inject('Logger')
     private logger: LoggerMethods,
-    @inject('VideoRespository')
+    @inject('VideoRepository')
     private videoRepository: VideoRepository,
-    @inject('CategoryReposotory')
+    @inject('CategoryRepository')
     private categoryRepository: CategoryRepository,
     @inject('CreateVideoValidator')
     private validator: RequestValidator<CreateVideoRequest>,
@@ -48,12 +48,12 @@ export class CreateVideoUseCase extends UseCase<
       const { isValid, invalidFields } = this.validator.validate(request);
 
       if (!isValid) {
-        throw new InvalidDataError(invalidFields);
+        return this.left(new InvalidDataError(invalidFields));
       }
 
       let categories = [];
 
-      if (categories.length > 0) {
+      if (request.categoriesId && request.categoriesId.length > 0) {
         categories = await this.categoryRepository
           .listCategory({
             id: request.categoriesId,
@@ -61,6 +61,8 @@ export class CreateVideoUseCase extends UseCase<
           })
           .then(data => data.map(category => category.toDTO()));
       }
+
+      delete request.categoriesId;
 
       const newVideo = new Video({
         categories,

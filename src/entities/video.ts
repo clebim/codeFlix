@@ -5,7 +5,7 @@ import { getLocalTimeZone } from '@shared/get-local-timezone';
 import {
   Category,
   CategoryConstructorProperties,
-  CategoryProperties,
+  CategoryPlainProperties,
 } from './category';
 import { Entity } from './entity';
 
@@ -22,7 +22,7 @@ export type VideoProperties = {
 };
 
 export type VideoPlainProperties = Omit<VideoProperties, 'categories'> & {
-  categories: CategoryProperties[];
+  categories: CategoryPlainProperties[];
 };
 
 type UpdateVideoProperties = {

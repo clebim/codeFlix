@@ -1,9 +1,15 @@
+import { Controller } from '@adapters/controllers';
+import {
+  ContainerVersion,
+  injectionFactory,
+} from '@external/dependency-injection/factory';
+import { adapterRouteJson } from '@external/http/express-route-adapter';
 import {
   ExpressUploadStream,
   ExpressStreamOptions,
 } from '@main/middlewares/express-upload-stream';
 import crypto from 'crypto';
-import { Request, Response, Router } from 'express';
+import { Router } from 'express';
 import { resolve } from 'path';
 
 const uploadOptions: ExpressStreamOptions = {
@@ -22,9 +28,11 @@ const uploadOptions: ExpressStreamOptions = {
 export default (router: Router): void => {
   router.post('/private/v1/video', [
     ExpressUploadStream(uploadOptions),
-    async (req: Request, res: Response) => {
-      console.log(req.files);
-      return res.sendStatus(200);
-    },
+    adapterRouteJson(
+      injectionFactory<Controller>(
+        'CreateVideoController',
+        ContainerVersion.V1,
+      ),
+    ),
   ]);
 };

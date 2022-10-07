@@ -23,6 +23,8 @@ export type CategoryConstructorProperties = Omit<
   createdAt?: Date;
 };
 
+export type CategoryPlainProperties = CategoryProperties & { id: string };
+
 export class Category extends Entity<Category> {
   public readonly props: CategoryProperties;
 
@@ -56,6 +58,6 @@ export class Category extends Entity<Category> {
   }
 
   public toDTO() {
-    return this.classToPlain<CategoryProperties>(this);
+    return this.classToPlain<CategoryPlainProperties>(this);
   }
 }

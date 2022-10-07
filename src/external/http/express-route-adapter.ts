@@ -15,6 +15,8 @@ export const adapterRouteJson =
         query: req.query as QueryParamsBase,
         headers: req.headers,
         ip: req.ip,
+        file: req.file,
+        files: req.files,
       };
 
       const httpResponse = await controller.handle(request);

@@ -17,7 +17,9 @@ export class CategoryRepository implements CategoryRepositoryContract {
   }
 
   public async save(entity: Category): Promise<Category> {
-    await this.repository.save(entity.toDTO());
+    const categotySchema = this.repository.create(entity.toDTO());
+
+    await this.repository.save(categotySchema);
 
     return entity;
   }

@@ -1,4 +1,12 @@
-import { Column, Entity, PrimaryColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToMany,
+  PrimaryColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+
+import { VideoSchema } from './video';
 
 @Entity('category')
 export class CategorySchema {
@@ -11,9 +19,15 @@ export class CategorySchema {
   @Column({ nullable: true })
   description: string;
 
+  @Column({ name: 'is_active', default: true })
+  isActive: boolean;
+
   @Column({ name: 'created_at', type: 'timestamp' })
   createdAt: Date;
 
   @UpdateDateColumn({ name: 'updatedAt', select: false })
   updatedAt: Date;
+
+  @ManyToMany(() => VideoSchema, video => video.categories)
+  videos: VideoSchema[];
 }

@@ -1,4 +1,5 @@
 import { CategoryRepository } from '@external/orm/repositories/category-repository';
+import { VideoRepository } from '@external/orm/repositories/video-repository';
 import { GoogleStorageService } from '@external/storage/google-storage-service';
 import { container } from 'tsyringe';
 
@@ -12,5 +13,6 @@ container.registerSingleton('GoogleStorageService', GoogleStorageService);
 
 // REPOSITORIES
 container.registerSingleton('CategoryRepository', CategoryRepository);
+container.registerSingleton('VideoRepository', VideoRepository);
 
 export { container, containerV1 };

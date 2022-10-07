@@ -1,3 +1,4 @@
+import { Request } from 'express';
 import { IncomingHttpHeaders } from 'http';
 
 export type QueryParamsBase<T = object> = {
@@ -18,4 +19,6 @@ export type HttpRequest<
   body?: Body;
   headers?: IncomingHttpHeaders;
   ip?: string;
+  file?: File;
+  files?: File[];
 };

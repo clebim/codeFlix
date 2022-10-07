@@ -2,6 +2,7 @@ import { generateUniqueId } from '../shared/domain/unique-entity-id';
 
 type EntityProperties<T = object> = {
   props: T;
+  id?: string;
 };
 
 export class Entity<Props extends EntityProperties, Y = string> {
@@ -66,7 +67,7 @@ export class Entity<Props extends EntityProperties, Y = string> {
     const value = this.transformToObject<T>(valueToBeReturned);
 
     return {
-      id: this.id,
+      id: entity.id,
       ...value,
     };
   }
