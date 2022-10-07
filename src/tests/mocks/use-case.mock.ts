@@ -11,6 +11,10 @@ import {
   UpdateCategoryResponse,
 } from '@usecases/category/update-category-use-case';
 import { UseCase } from '@usecases/port/use-case';
+import {
+  CreateVideoRequest,
+  CreateVideoResponse,
+} from '@usecases/video/create-video-use-case';
 import { mock, MockProxy } from 'jest-mock-extended';
 
 export const createCategoryUseCaseMock: MockProxy<
@@ -30,3 +34,9 @@ export const updateCategoryUseCaseMock: MockProxy<
 > &
   UseCase<UpdateCategoryRequest, UpdateCategoryResponse> =
   mock<UseCase<UpdateCategoryRequest, UpdateCategoryResponse>>();
+
+export const createVideoUseCaseMock: MockProxy<
+  UseCase<CreateVideoRequest, CreateVideoResponse>
+> &
+  UseCase<CreateVideoRequest, CreateVideoResponse> =
+  mock<UseCase<CreateVideoRequest, CreateVideoResponse>>();

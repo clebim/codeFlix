@@ -2,6 +2,7 @@ import { CreateCategoryRequest } from '@usecases/category/create-category-use-ca
 import { ListCategoryRequest } from '@usecases/category/list-category-use-case';
 import { UpdateCategoryRequest } from '@usecases/category/update-category-use-case';
 import { RequestValidator } from '@usecases/port/request-validator';
+import { CreateVideoRequest } from '@usecases/video/create-video-use-case';
 import { mock, MockProxy } from 'jest-mock-extended';
 
 export const createCategoryValidatorMock: MockProxy<
@@ -21,3 +22,9 @@ export const updateCategoryValidatorMock: MockProxy<
 > &
   RequestValidator<UpdateCategoryRequest> =
   mock<RequestValidator<UpdateCategoryRequest>>();
+
+export const createVideoValidatorMock: MockProxy<
+  RequestValidator<CreateVideoRequest>
+> &
+  RequestValidator<CreateVideoRequest> =
+  mock<RequestValidator<CreateVideoRequest>>();
