@@ -25,11 +25,8 @@ export class CreateVideoController extends Controller {
     httpRequest: HttpRequest<Omit<CreateVideoRequest, 'filename'>>,
   ): Promise<HttpResponse> {
     try {
-      const { categoriesId } = httpRequest.body;
       const request = {
-        categoriesId: Array.isArray(categoriesId)
-          ? categoriesId
-          : [categoriesId],
+        categoriesId: httpRequest.body.categoriesId,
         title: httpRequest.body.title,
         userId: generateUniqueId(),
         description: httpRequest.body.description,

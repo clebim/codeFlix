@@ -11,7 +11,9 @@ export class CreateVideoValidator
   constructor() {
     const requestSchema = Joi.object<CreateVideoRequest>({
       userId: Joi.string().uuid().required(),
-      categoriesId: Joi.array().items(Joi.string().uuid()).optional(),
+      categoriesId: Joi.alternatives()
+        .try(Joi.array().items(Joi.string().uuid()), Joi.string().uuid())
+        .optional(),
       filename: Joi.string().required(),
       public: Joi.boolean().optional(),
       thumbnail: Joi.string().optional(),

@@ -17,7 +17,7 @@ export type CreateVideoRequest = {
   description?: string;
   thumbnail?: string;
   public?: boolean;
-  categoriesId: string[];
+  categoriesId: string[] | string;
 };
 
 export type CreateVideoResponse = Either<
@@ -53,7 +53,7 @@ export class CreateVideoUseCase extends UseCase<
 
       let categories = [];
 
-      if (request.categoriesId && request.categoriesId.length > 0) {
+      if (request.categoriesId) {
         categories = await this.categoryRepository
           .listCategory({
             id: request.categoriesId,
