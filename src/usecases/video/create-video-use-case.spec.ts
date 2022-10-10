@@ -3,12 +3,15 @@ import { Video } from '@entities/video';
 import { makeCategoryListMock } from '@tests/mocks/category/category-list';
 import {
   categoryRepositoryMock,
+  userRepositoryMock,
   videoRepositoryMock,
 } from '@tests/mocks/repository.mock';
 import { loggerMock } from '@tests/mocks/service.mock';
+import { makeUserMock } from '@tests/mocks/user/user.mock';
 import { createVideoValidatorMock } from '@tests/mocks/validator.mock';
 import { makeCreateVideoMock } from '@tests/mocks/video/create-video.mock';
 import { InvalidDataError } from '@usecases/errors/invalid-data-error';
+import { UserNotFoundError } from '@usecases/errors/user/user-not-found';
 import { UseCase } from '@usecases/port/use-case';
 import faker from 'faker';
 import { mockReset } from 'jest-mock-extended';
@@ -34,12 +37,13 @@ describe('Create video use case test', () => {
       loggerMock,
       videoRepositoryMock,
       categoryRepositoryMock,
+      userRepositoryMock,
       createVideoValidatorMock,
     );
   });
 
   describe('When create video is called', () => {
-    it('and should return the new category', async () => {
+    it('and should return the new video', async () => {
       const request = makeCreateVideoMock();
       const { categoriesId } = request;
       const uuid = faker.datatype.uuid();
@@ -55,10 +59,13 @@ describe('Create video use case test', () => {
       const categoryPlainList = categoriesList.map(category =>
         category.toDTO(),
       );
+      const user = makeUserMock();
       const videoEntity = new Video({
         ...request,
         categories: categoryPlainList,
+        user: user.toDTO(),
       });
+      userRepositoryMock.getUniqueBy.mockResolvedValue(user);
       videoRepositoryMock.save.mockResolvedValue(videoEntity);
 
       const response = await useCase.execute(request);
@@ -80,6 +87,7 @@ describe('Create video use case test', () => {
         filename: request.filename,
         likes: 0,
         userId: request.userId,
+        user: user.toDTO(),
         description: request.description,
         createdAt: new Date(),
       });
@@ -100,6 +108,29 @@ describe('Create video use case test', () => {
         expect(response).toBeTruthy();
         expect(response.isFailure).toBeTruthy();
         expect(response.error).toBeInstanceOf(InvalidDataError);
+        expect(createVideoValidatorMock.validate).toBeCalledTimes(1);
+        expect(createVideoValidatorMock.validate).toBeCalledWith(request);
+        expect(categoryRepositoryMock.listCategory).toBeCalledTimes(0);
+        expect(videoRepositoryMock.save).toBeCalledTimes(0);
+        expect(response.data).not.toBeTruthy();
+      });
+
+      it('user not found in api', async () => {
+        const request = makeCreateVideoMock();
+
+        createVideoValidatorMock.validate.mockReturnValue({
+          isValid: true,
+          value: request,
+          invalidFields: [],
+        });
+
+        userRepositoryMock.getUniqueBy.mockResolvedValue(undefined);
+
+        const response = await useCase.execute(request);
+
+        expect(response).toBeTruthy();
+        expect(response.isFailure).toBeTruthy();
+        expect(response.error).toBeInstanceOf(UserNotFoundError);
         expect(createVideoValidatorMock.validate).toBeCalledTimes(1);
         expect(createVideoValidatorMock.validate).toBeCalledWith(request);
         expect(categoryRepositoryMock.listCategory).toBeCalledTimes(0);

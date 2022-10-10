@@ -1,9 +1,11 @@
 import { Video, VideoPlainProperties } from '@entities/video';
 import { CategoryRepository } from '@usecases/category/port/category-repository';
 import { InvalidDataError } from '@usecases/errors/invalid-data-error';
+import { UserNotFoundError } from '@usecases/errors/user/user-not-found';
 import { Either } from '@usecases/helpers/either';
 import { RequestValidator } from '@usecases/port/request-validator';
 import { UseCase } from '@usecases/port/use-case';
+import { UserRepository } from '@usecases/user/port/user-repository';
 import { inject, injectable } from 'tsyringe';
 
 import { LoggerMethods } from '@shared/logger';
@@ -21,7 +23,7 @@ export type CreateVideoRequest = {
 };
 
 export type CreateVideoResponse = Either<
-  InvalidDataError,
+  InvalidDataError | UserNotFoundError,
   VideoPlainProperties
 >;
 
@@ -37,6 +39,8 @@ export class CreateVideoUseCase extends UseCase<
     private videoRepository: VideoRepository,
     @inject('CategoryRepository')
     private categoryRepository: CategoryRepository,
+    @inject('UserRepository')
+    private userRepository: UserRepository,
     @inject('CreateVideoValidator')
     private validator: RequestValidator<CreateVideoRequest>,
   ) {
@@ -49,6 +53,14 @@ export class CreateVideoUseCase extends UseCase<
 
       if (!isValid) {
         return this.left(new InvalidDataError(invalidFields));
+      }
+
+      const user = await this.userRepository.getUniqueBy({
+        id: request.userId,
+      });
+
+      if (!user) {
+        return this.left(new UserNotFoundError('User not found in api'));
       }
 
       let categories = [];
@@ -65,8 +77,9 @@ export class CreateVideoUseCase extends UseCase<
       delete request.categoriesId;
 
       const newVideo = new Video({
-        categories,
         ...request,
+        categories,
+        user: user.toDTO(),
       });
 
       await this.videoRepository.save(newVideo);

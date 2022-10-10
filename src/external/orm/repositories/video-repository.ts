@@ -1,4 +1,3 @@
-import { CategoryPlainProperties } from '@entities/category';
 import { Video } from '@entities/video';
 import { VideoRepository as VideoRepositoryContract } from '@usecases/video/port/video-repository';
 import { Repository } from 'typeorm';

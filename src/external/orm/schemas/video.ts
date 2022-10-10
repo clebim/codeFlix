@@ -1,13 +1,16 @@
 import {
   Column,
   Entity,
+  JoinColumn,
   JoinTable,
   ManyToMany,
+  ManyToOne,
   PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 import { CategorySchema } from './category';
+import { UserSchema } from './user';
 
 @Entity('video')
 export class VideoSchema {
@@ -42,6 +45,10 @@ export class VideoSchema {
     inverseJoinColumns: [{ name: 'category_id' }],
   })
   categories: CategorySchema[];
+
+  @ManyToOne(() => UserSchema, user => user.videos)
+  @JoinColumn({ name: 'user_id' })
+  user: UserSchema;
 
   @Column({ name: 'created_at', type: 'timestamp' })
   createdAt: Date;

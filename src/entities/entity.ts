@@ -19,7 +19,7 @@ export class Entity<Props extends EntityProperties, Y = string> {
       !Array.isArray(value) &&
       !(value instanceof Date) &&
       !(value instanceof Error) &&
-      !(value instanceof Object)
+      value instanceof Object
     ) {
       return true;
     }
@@ -45,7 +45,7 @@ export class Entity<Props extends EntityProperties, Y = string> {
     );
   }
 
-  protected classToPlain<T>(entity: Props): T & { id: string | Y } {
+  protected classToPlain<T>(entity: Props): T {
     let valueToBeReturned: any[][] = [[]];
 
     if (entity.props) {

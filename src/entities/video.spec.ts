@@ -1,3 +1,4 @@
+import { makeUserMock } from '@tests/mocks/user/user.mock';
 import faker from 'faker';
 
 import { Category } from './category';
@@ -9,6 +10,7 @@ describe('Video Tests', () => {
       userId: faker.datatype.uuid(),
       title: faker.datatype.string(),
       filename: faker.datatype.string(),
+      user: makeUserMock().toDTO(),
       categories: [
         {
           id: faker.datatype.uuid(),
@@ -35,6 +37,7 @@ describe('Video Tests', () => {
       userId: faker.datatype.uuid(),
       title: faker.datatype.string(),
       filename: faker.datatype.string(),
+      user: makeUserMock().toDTO(),
       categories: [
         {
           id: faker.datatype.uuid(),

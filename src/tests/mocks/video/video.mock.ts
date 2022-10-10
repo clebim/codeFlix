@@ -3,6 +3,7 @@ import { changeValuesMock } from '@tests/helper/mock-helper.mock';
 import faker from 'faker';
 
 import { makeCreateCategoryMock } from '../category/create-category.mock';
+import { makeUserMock } from '../user/user.mock';
 
 export const makeVideoMock = (
   valueHasToBeReplaced?: Partial<VideoConstructorProperties>,
@@ -16,6 +17,7 @@ export const makeVideoMock = (
     description: faker.datatype.string(),
     likes: 0,
     public: true,
+    user: makeUserMock().toDTO(),
     thumbnail: faker.datatype.string(),
   };
 

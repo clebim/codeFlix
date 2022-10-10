@@ -1,6 +1,4 @@
-import { zonedTimeToUtc } from 'date-fns-tz';
-
-import { getLocalTimeZone } from '@shared/get-local-timezone';
+import { convertZonedTimeToUtc } from '@shared/domain/zoned-time-to-utc';
 
 import {
   Category,
@@ -8,6 +6,7 @@ import {
   CategoryPlainProperties,
 } from './category';
 import { Entity } from './entity';
+import { User, UserConstructorProperties, UserPlainProperties } from './user';
 
 export type VideoProperties = {
   userId: string;
@@ -18,11 +17,16 @@ export type VideoProperties = {
   public: boolean;
   likes: number;
   categories: Category[];
+  user: User;
   createdAt: Date;
 };
 
-export type VideoPlainProperties = Omit<VideoProperties, 'categories'> & {
+export type VideoPlainProperties = Omit<
+  VideoProperties,
+  'categories' | 'user'
+> & {
   categories: CategoryPlainProperties[];
+  user: UserPlainProperties;
 };
 
 type UpdateVideoProperties = {
@@ -35,10 +39,11 @@ type UpdateVideoProperties = {
 
 export type VideoConstructorProperties = Omit<
   VideoProperties,
-  'categories' | 'createdAt' | 'public' | 'likes'
+  'categories' | 'createdAt' | 'public' | 'likes' | 'user'
 > & {
   id?: string;
   categories?: CategoryConstructorProperties[];
+  user: UserConstructorProperties;
   public?: boolean;
   likes?: number;
   createdAt?: Date;
@@ -55,9 +60,11 @@ export class Video extends Entity<Video> {
       description: props.description ?? null,
       thumbnail: props.thumbnail ?? null,
       likes: props.likes ?? 0,
-      categories: props.categories.map(category => new Category(category)),
-      createdAt:
-        props.createdAt ?? zonedTimeToUtc(new Date(), getLocalTimeZone()),
+      user: new User(props.user),
+      categories: props.categories
+        ? props.categories.map(category => new Category(category))
+        : [],
+      createdAt: props.createdAt ?? convertZonedTimeToUtc(new Date()),
     };
     delete entityProperties.id;
     super(props.id);
