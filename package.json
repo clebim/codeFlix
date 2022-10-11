@@ -14,6 +14,7 @@
     "migration:run:dev": "cross-env NODE_ENV=dev yarn run typeorm migration:run -d src/external/orm/index.ts",
     "migration:generate": "cross-env NODE_ENV=dev yarn typeorm migration:generate src/external/orm/migrations/$NAME -d src/external/orm/index.ts",
     "migration:create": "cross-env NODE_ENV=dev yarn typeorm migration:create src/external/orm/migrations/$NAME",
+    "migration:revert": "cross-env NODE_ENV=dev yarn typeorm migration:revert -d src/external/orm/index.ts",
     "typeorm": "ts-node-dev -r tsconfig-paths/register node_modules/typeorm/cli.js"
   },
   "keywords": [],

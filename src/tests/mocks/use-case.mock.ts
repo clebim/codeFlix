@@ -1,4 +1,8 @@
 import {
+  CreateUserRequest,
+  CreateUserResponse,
+} from '@usecases/account/create-user-use-case';
+import {
   CreateCategoryRequest,
   CreateCategoryResponse,
 } from '@usecases/category/create-category-use-case';
@@ -40,3 +44,9 @@ export const createVideoUseCaseMock: MockProxy<
 > &
   UseCase<CreateVideoRequest, CreateVideoResponse> =
   mock<UseCase<CreateVideoRequest, CreateVideoResponse>>();
+
+export const createUserUseCaseMock: MockProxy<
+  UseCase<CreateUserRequest, CreateUserResponse>
+> &
+  UseCase<CreateUserRequest, CreateUserResponse> =
+  mock<UseCase<CreateUserRequest, CreateUserResponse>>();

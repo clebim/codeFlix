@@ -30,12 +30,14 @@ export class UserRepository implements UserRepositoryContract {
 
   async getUniqueBy(
     whereOptions: GetUniqueUserOptions,
-    relations: RelationOptions[] = [],
+    relations: RelationOptions = [],
   ): Promise<User> {
     const user = await this.repository.findOne({
       where: whereOptions,
       relations,
     });
+
+    delete user.password;
 
     return user ? new User(user) : undefined;
   }

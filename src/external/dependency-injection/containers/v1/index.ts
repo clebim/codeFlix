@@ -1,6 +1,7 @@
 import { CreateCategoryController } from '@adapters/controllers/category/create-category-controller';
 import { ListCategoryController } from '@adapters/controllers/category/list-category-controller';
 import { UpdateCategoryController } from '@adapters/controllers/category/update-category-controller';
+import { CreateUserController } from '@adapters/controllers/user/create-user-controller';
 import { CreateVideoController } from '@adapters/controllers/video/create-video-controller';
 import { CreateCategoryValidator } from '@external/validators/validation-services/category/create-category-validator';
 import { ListCategoryValidator } from '@external/validators/validation-services/category/list-category-validator';
@@ -33,6 +34,7 @@ containerV1.registerSingleton(
   UpdateCategoryController,
 );
 containerV1.registerSingleton('CreateVideoController', CreateVideoController);
+containerV1.registerSingleton('CreateUserController', CreateUserController);
 
 // VALIDATORS
 containerV1.registerSingleton(

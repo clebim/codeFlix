@@ -22,7 +22,7 @@ export class UserSchema {
   @Column()
   password: string;
 
-  @Column()
+  @Column({ nullable: true })
   photo: string;
 
   @Column({ name: 'is_active', default: true })

@@ -6,8 +6,6 @@ import {
 } from '@usecases/video/create-video-use-case';
 import { inject, injectable } from 'tsyringe';
 
-import { generateUniqueId } from '@shared/domain/unique-entity-id';
-
 import { Controller } from '../index';
 import { HttpRequest } from '../port/http-request';
 import { HttpResponse } from '../port/http-response';
@@ -28,7 +26,7 @@ export class CreateVideoController extends Controller {
       const request = {
         categoriesId: httpRequest.body.categoriesId,
         title: httpRequest.body.title,
-        userId: generateUniqueId(),
+        userId: '37e2aaaf-5998-42f6-9c10-6459e15692b3',
         description: httpRequest.body.description,
         public: httpRequest.body.public,
       } as CreateVideoRequest;

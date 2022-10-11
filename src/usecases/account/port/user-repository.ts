@@ -6,12 +6,12 @@ export type GetUniqueUserOptions = {
   id?: string;
 };
 
-export type RelationOptions = 'videos';
+export type RelationOptions = Array<'videos' | 'videos.categories'>;
 
 export interface UserRepository {
   save(entity: User): Promise<User>;
   getUniqueBy(
     whereOptions: GetUniqueUserOptions,
-    relations?: RelationOptions[],
+    relations?: RelationOptions,
   ): Promise<User | undefined>;
 }

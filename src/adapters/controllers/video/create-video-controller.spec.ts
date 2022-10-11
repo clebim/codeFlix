@@ -22,7 +22,7 @@ describe('Create category controller test', () => {
 
   describe('When create category controller called', () => {
     it('and return created category', async () => {
-      const uuid = faker.datatype.uuid();
+      const uuid = '37e2aaaf-5998-42f6-9c10-6459e15692b3';
       jest.spyOn(uuidApi, 'v4').mockReturnValue(uuid);
       const createVideoRequest = makeCreateVideoMock({ userId: uuid });
       delete createVideoRequest.filename;
@@ -71,7 +71,7 @@ describe('Create category controller test', () => {
     });
 
     it('and return a unprocessable entity', async () => {
-      const uuid = faker.datatype.uuid();
+      const uuid = '37e2aaaf-5998-42f6-9c10-6459e15692b3';
       jest.spyOn(uuidApi, 'v4').mockReturnValue(uuid);
       const createVideoRequest = makeCreateVideoMock({ userId: uuid });
       delete createVideoRequest.filename;

@@ -60,7 +60,7 @@ export class Video extends Entity<Video> {
       description: props.description ?? null,
       thumbnail: props.thumbnail ?? null,
       likes: props.likes ?? 0,
-      user: new User(props.user),
+      user: props.user ? new User(props.user) : null,
       categories: props.categories
         ? props.categories.map(category => new Category(category))
         : [],

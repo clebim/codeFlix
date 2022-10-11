@@ -44,8 +44,9 @@ export class User extends Entity<User> {
   constructor(props: UserConstructorProperties) {
     const entityProperties = {
       ...props,
-      photo: props.photo ?? null,
-      isActive: props.isActive ?? true,
+      password: props.password ?? null,
+      photo: props?.photo ?? null,
+      isActive: props?.isActive ?? true,
       videos: props.videos ? props.videos.map(video => new Video(video)) : [],
       createdAt: props.createdAt ?? convertZonedTimeToUtc(new Date()),
     };
