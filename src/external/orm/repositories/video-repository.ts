@@ -13,7 +13,11 @@ export class VideoRepository implements VideoRepositoryContract {
   }
 
   async save(entity: Video): Promise<Video> {
-    const videoSchema = this.repository.create(entity.toDTO());
+    const dto = entity.toDTO();
+
+    delete dto.user;
+
+    const videoSchema = this.repository.create(dto);
 
     await this.repository.save(videoSchema);
 

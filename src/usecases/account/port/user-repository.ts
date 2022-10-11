@@ -5,10 +5,13 @@ export type GetUniqueUserOptions = {
   email?: string;
   id?: string;
 };
+
+export type RelationOptions = 'videos';
+
 export interface UserRepository {
   save(entity: User): Promise<User>;
   getUniqueBy(
     whereOptions: GetUniqueUserOptions,
-    includes?: ['videos'],
+    relations?: RelationOptions[],
   ): Promise<User | undefined>;
 }

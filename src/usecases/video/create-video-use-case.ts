@@ -5,7 +5,7 @@ import { UserNotFoundError } from '@usecases/errors/user/user-not-found';
 import { Either } from '@usecases/helpers/either';
 import { RequestValidator } from '@usecases/port/request-validator';
 import { UseCase } from '@usecases/port/use-case';
-import { UserRepository } from '@usecases/user/port/user-repository';
+import { UserRepository } from '@usecases/account/port/user-repository';
 import { inject, injectable } from 'tsyringe';
 
 import { LoggerMethods } from '@shared/logger';

@@ -1,3 +1,4 @@
+import { CreateUserRequest } from '@usecases/account/create-user-use-case';
 import { CreateCategoryRequest } from '@usecases/category/create-category-use-case';
 import { ListCategoryRequest } from '@usecases/category/list-category-use-case';
 import { UpdateCategoryRequest } from '@usecases/category/update-category-use-case';
@@ -28,3 +29,9 @@ export const createVideoValidatorMock: MockProxy<
 > &
   RequestValidator<CreateVideoRequest> =
   mock<RequestValidator<CreateVideoRequest>>();
+
+export const createUserValidatorMock: MockProxy<
+  RequestValidator<CreateUserRequest>
+> &
+  RequestValidator<CreateUserRequest> =
+  mock<RequestValidator<CreateUserRequest>>();

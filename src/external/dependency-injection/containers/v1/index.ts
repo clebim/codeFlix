@@ -6,6 +6,7 @@ import { CreateCategoryValidator } from '@external/validators/validation-service
 import { ListCategoryValidator } from '@external/validators/validation-services/category/list-category-validator';
 import { UpdateCategoryValidator } from '@external/validators/validation-services/category/update-category-validator';
 import { CreateVideoValidator } from '@external/validators/validation-services/video/create-video-validator';
+import { CreateUserUseCase } from '@usecases/account/create-user-use-case';
 import { CreateCategoryUseCase } from '@usecases/category/create-category-use-case';
 import { ListCategoryUseCase } from '@usecases/category/list-category-use-case';
 import { UpdateCategoryUseCase } from '@usecases/category/update-category-use-case';
@@ -18,6 +19,7 @@ containerV1.registerSingleton('CreateCategoryUseCase', CreateCategoryUseCase);
 containerV1.registerSingleton('ListCategoryUseCase', ListCategoryUseCase);
 containerV1.registerSingleton('UpdateCategoryUseCase', UpdateCategoryUseCase);
 containerV1.registerSingleton('CreateVideoUseCase', CreateVideoUseCase);
+containerV1.registerSingleton('CreateUserUseCase', CreateUserUseCase);
 
 // CONTROLLERS
 containerV1.registerSingleton(
