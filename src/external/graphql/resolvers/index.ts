@@ -12,6 +12,7 @@ export class Resolver {
     listCategoryController: 'ListCategoryController',
     createCategoryController: 'CreateCategoryController',
     updateCategoryController: 'UpdateCategoryController',
+    createUserController: 'CreateUserController',
   };
 
   protected getControllerV1(injectionToken: string): Controller {

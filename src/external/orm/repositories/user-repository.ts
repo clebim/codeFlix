@@ -37,7 +37,7 @@ export class UserRepository implements UserRepositoryContract {
       relations,
     });
 
-    delete user.password;
+    if (user) delete user.password;
 
     return user ? new User(user) : undefined;
   }

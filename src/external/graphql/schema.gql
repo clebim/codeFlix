@@ -16,6 +16,13 @@ input CreateCategoryInput {
   name: String!
 }
 
+input CreateUserInput {
+  email: String!
+  name: String!
+  password: String!
+  passwordConfirmation: String!
+}
+
 """
 The javascript `Date` as string. Type represents date and time as the ISO Date string.
 """
@@ -23,6 +30,7 @@ scalar DateTime
 
 type Mutation {
   createCategory(data: CreateCategoryInput!): Category!
+  createUser(data: CreateUserInput!): User!
   updateCategory(data: UpdateCategoryInput!): Category!
 }
 
@@ -35,4 +43,27 @@ input UpdateCategoryInput {
   id: String!
   isActive: Boolean
   name: String
+}
+
+type User {
+  createdAt: DateTime!
+  email: String!
+  id: String!
+  isActive: Boolean!
+  name: String!
+  photo: String
+  videos: [Video!]!
+}
+
+type Video {
+  createdAt: DateTime!
+  description: String
+  filename: String!
+  id: String!
+  likes: Float!
+  public: Boolean!
+  thumbnail: String
+  title: String!
+  user: User
+  userId: String!
 }
