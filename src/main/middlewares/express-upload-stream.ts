@@ -1,6 +1,6 @@
 import busboy from 'busboy';
 import crypto from 'crypto';
-import e, { NextFunction, Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { createWriteStream, WriteStream } from 'fs';
 import path from 'path';
 import internal from 'stream';

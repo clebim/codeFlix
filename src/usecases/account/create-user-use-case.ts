@@ -34,7 +34,9 @@ export class CreateUserUseCase extends UseCase<
   constructor(
     @inject('Logger')
     private logger: LoggerMethods,
+    @inject('UserRepository')
     private userRepository: UserRepository,
+    @inject('CreateUserValidator')
     private validator: RequestValidator<CreateUserRequest>,
   ) {
     super();

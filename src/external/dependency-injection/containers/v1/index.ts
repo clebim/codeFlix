@@ -5,6 +5,7 @@ import { CreateVideoController } from '@adapters/controllers/video/create-video-
 import { CreateCategoryValidator } from '@external/validators/validation-services/category/create-category-validator';
 import { ListCategoryValidator } from '@external/validators/validation-services/category/list-category-validator';
 import { UpdateCategoryValidator } from '@external/validators/validation-services/category/update-category-validator';
+import { CreateUserValidator } from '@external/validators/validation-services/user/create-user-validator';
 import { CreateVideoValidator } from '@external/validators/validation-services/video/create-video-validator';
 import { CreateUserUseCase } from '@usecases/account/create-user-use-case';
 import { CreateCategoryUseCase } from '@usecases/category/create-category-use-case';
@@ -44,3 +45,4 @@ containerV1.registerSingleton(
   UpdateCategoryValidator,
 );
 containerV1.registerSingleton('CreateVideoValidator', CreateVideoValidator);
+containerV1.registerSingleton('CreateUserValidator', CreateUserValidator);
