@@ -25,7 +25,9 @@ export const adapterRouteJson =
         res.set(httpResponse.headers);
       }
 
-      return res.status(httpResponse.statusCode).json(httpResponse.body);
+      res.status(httpResponse.statusCode).json(httpResponse.body);
+
+      return next();
     } catch (error) {
       return next(error);
     }

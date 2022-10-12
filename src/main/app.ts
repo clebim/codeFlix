@@ -3,7 +3,7 @@ import express, { Express } from 'express';
 import { setupGraphql } from './graphql';
 import { setupHealthCheck } from './health-check';
 import { setupMiddlewares } from './middlewares';
-import { handlerError } from './middlewares/handler-error';
+import { handlerError } from './middlewares/express/handler-error';
 import { setupProviders } from './providers';
 import { setupRoutes } from './routes';
 

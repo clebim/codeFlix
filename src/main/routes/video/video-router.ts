@@ -1,4 +1,5 @@
 import { Controller } from '@adapters/controllers';
+import { streamFileAdapter } from '@adapters/stream/stream-file';
 import {
   ContainerVersion,
   injectionFactory,
@@ -7,7 +8,7 @@ import { adapterRouteJson } from '@external/http/express-route-adapter';
 import {
   ExpressUploadStream,
   ExpressStreamOptions,
-} from '@main/middlewares/express-upload-stream';
+} from '@main/middlewares/express/express-upload-stream';
 import crypto from 'crypto';
 import { Router } from 'express';
 import { resolve } from 'path';
@@ -34,5 +35,6 @@ export default (router: Router): void => {
         ContainerVersion.V1,
       ),
     ),
+    // deleteFileIfNecessary,
   ]);
 };

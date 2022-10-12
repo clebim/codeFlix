@@ -7,7 +7,7 @@ import { appConfig } from '@main/config';
 import {
   FileProps,
   ReturnStream,
-} from '@main/middlewares/express-upload-stream';
+} from '@main/middlewares/express/express-upload-stream';
 import crypto from 'crypto';
 
 import { Logger } from '@shared/logger';

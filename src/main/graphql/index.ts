@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { resolvers } from '@external/graphql';
 import { appConfig } from '@main/config';
-import { graphqlInterceptorError } from '@main/middlewares/graphql-interceptor-error';
+import { graphqlInterceptorError } from '@main/middlewares/graphql/graphql-interceptor-error';
 import { ApolloServer } from 'apollo-server-express';
 import { Express } from 'express';
 import path from 'path';

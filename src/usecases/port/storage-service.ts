@@ -1,6 +1,6 @@
 import internal from 'stream';
 
-export type BucketNames = 'videoContainer';
+export type BucketNames = 'codeflix_video_bucket';
 
 export type DownloadBufferProps = {
   bucketName: BucketNames;
@@ -30,9 +30,15 @@ export type FileUploadProps = {
   bucketName: string;
 };
 
+export type DeleteFileProps = {
+  filename: string;
+  bucket: BucketNames;
+};
+
 export interface StorageService {
   createStorageStream(options: CreateStreamOptions): internal.Writable;
   uploadFile(file: FileUploadProps): Promise<string>;
   existsBuffer(existsBufferProps: ExistsBufferProps): Promise<boolean>;
   downloadBuffer(downloadBufferProps: DownloadBufferProps): Promise<Buffer>;
+  deleteFile(deleteProps: DeleteFileProps): Promise<void>;
 }

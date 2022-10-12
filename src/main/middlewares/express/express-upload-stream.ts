@@ -50,9 +50,8 @@ export const ExpressUploadStream =
     const files: File[] = [];
     const streamParameter = options?.stream ?? undefined;
     const filename = options?.diskStorage?.filename ?? undefined;
-
-    const bb = busboy({ headers: request.headers });
     try {
+      const bb = busboy({ headers: request.headers });
       await new Promise((resolve, reject) => {
         try {
           bb.on('field', (name, val) => {
@@ -145,11 +144,14 @@ export const ExpressUploadStream =
             });
 
             bb.on('error', error => {
-              return reject(error);
+              reject(error);
             });
 
-            bb.on('close', () => {
-              return resolve(true);
+            bb.on('finish', async () => {
+              await new Promise(resolve => {
+                setTimeout(resolve, 200);
+              });
+              resolve(true);
             });
           });
           request.pipe(bb);
