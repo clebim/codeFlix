@@ -46,7 +46,7 @@ export class ListVideosUseCase extends UseCase<
     private logger: LoggerMethods,
     @inject('VideoRepository')
     private videoRepository: VideoRepository,
-    // @inject('ListVideoValidator')
+    @inject('ListVideosValidator')
     private validator: RequestValidator<ListVideosRequest>,
   ) {
     super();
