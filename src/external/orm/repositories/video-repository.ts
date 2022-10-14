@@ -1,5 +1,8 @@
 import { Video } from '@entities/video';
-import { VideoRepository as VideoRepositoryContract } from '@usecases/video/port/video-repository';
+import {
+  ListVideoOptions,
+  VideoRepository as VideoRepositoryContract,
+} from '@usecases/video/port/video-repository';
 import { Repository } from 'typeorm';
 
 import { datasource } from '../index';
@@ -10,6 +13,10 @@ export class VideoRepository implements VideoRepositoryContract {
 
   constructor() {
     this.repository = datasource.getRepository(VideoSchema);
+  }
+
+  async listVideos(options: ListVideoOptions): Promise<Video[]> {
+    throw new Error('Method not implemented.');
   }
 
   async save(entity: Video): Promise<Video> {
