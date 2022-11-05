@@ -1,15 +1,19 @@
 import { generateUniqueId } from '../shared/domain/unique-entity-id';
 
-type EntityProperties<T = object> = {
+export type EntityProperties<T = object, Y = string> = {
+  id?: Y;
   props: T;
-  id?: string;
 };
 
-export class Entity<Props extends EntityProperties, Y = string> {
+export class Entity<Props, Y = string> {
   public readonly id: Y | string;
 
-  constructor(id?: Y) {
+  public readonly props: Props;
+
+  constructor(props: Props & { id?: Y }) {
+    const { id, ...rest } = props;
     this.id = id ?? generateUniqueId();
+    this.props = rest as Props;
   }
 
   private checkIfConvertToJSON(value: any): boolean {
@@ -45,7 +49,7 @@ export class Entity<Props extends EntityProperties, Y = string> {
     );
   }
 
-  protected classToPlain<T>(entity: Props): T {
+  protected classToPlain<T>(entity: Entity<Props>): T {
     let valueToBeReturned: any[][] = [[]];
 
     if (entity.props) {
@@ -67,7 +71,7 @@ export class Entity<Props extends EntityProperties, Y = string> {
     const value = this.transformToObject<T>(valueToBeReturned);
 
     return {
-      id: entity.id,
+      id: this.id,
       ...value,
     };
   }

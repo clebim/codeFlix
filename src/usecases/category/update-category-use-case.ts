@@ -1,4 +1,4 @@
-import { CategoryProperties } from '@entities/category';
+import { CategoryProperties } from '@entities/category/interfaces/category-properties';
 import { InvalidDataError } from '@usecases/errors/invalid-data-error';
 import { NotFoundError } from '@usecases/errors/not-found-error';
 import { Either } from '@usecases/helpers/either';

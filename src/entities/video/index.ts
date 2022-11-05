@@ -1,57 +1,15 @@
+import { Category } from '@entities/category';
+
 import { convertZonedTimeToUtc } from '@shared/domain/zoned-time-to-utc';
 
-import {
-  Category,
-  CategoryConstructorProperties,
-  CategoryPlainProperties,
-} from './category';
-import { Entity } from './entity';
-import { User, UserConstructorProperties, UserPlainProperties } from './user';
+import { Entity } from '../entity';
+import { User } from '../user';
+import { UpdateVideoProperties } from './interfaces/update-video-properties';
+import { VideoConstructorProperties } from './interfaces/video-constructor-properties';
+import { VideoPlainProperties } from './interfaces/video-plain-properties';
+import { VideoProperties } from './interfaces/video-properties';
 
-export type VideoProperties = {
-  userId: string;
-  filename: string;
-  title: string;
-  description?: string;
-  thumbnail?: string;
-  public: boolean;
-  likes: number;
-  categories: Category[];
-  user: User;
-  createdAt: Date;
-};
-
-export type VideoPlainProperties = Omit<
-  VideoProperties,
-  'categories' | 'user'
-> & {
-  categories: CategoryPlainProperties[];
-  user: UserPlainProperties;
-};
-
-type UpdateVideoProperties = {
-  filename?: string;
-  title?: string;
-  description?: string;
-  thumbnail?: string;
-  categories?: CategoryConstructorProperties[];
-};
-
-export type VideoConstructorProperties = Omit<
-  VideoProperties,
-  'categories' | 'createdAt' | 'public' | 'likes' | 'user'
-> & {
-  id?: string;
-  categories?: CategoryConstructorProperties[];
-  user: UserConstructorProperties;
-  public?: boolean;
-  likes?: number;
-  createdAt?: Date;
-};
-
-export class Video extends Entity<Video> {
-  public readonly props: VideoProperties;
-
+export class Video extends Entity<VideoProperties> {
   constructor(props: VideoConstructorProperties) {
     const entityProperties = {
       ...props,
@@ -66,9 +24,7 @@ export class Video extends Entity<Video> {
         : [],
       createdAt: props.createdAt ?? convertZonedTimeToUtc(new Date()),
     };
-    delete entityProperties.id;
-    super(props.id);
-    this.props = entityProperties;
+    super(entityProperties);
   }
 
   public putAsPrivate(): void {

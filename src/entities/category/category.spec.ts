@@ -1,4 +1,5 @@
-import { Category, CategoryProperties } from './category';
+import { Category } from './index';
+import { CategoryProperties } from './interfaces/category-properties';
 
 describe('Category Tests', () => {
   it('Test Constructor of category', () => {

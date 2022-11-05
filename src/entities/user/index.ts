@@ -1,46 +1,13 @@
 import { convertZonedTimeToUtc } from '@shared/domain/zoned-time-to-utc';
 
-import { Entity } from './entity';
-import {
-  Video,
-  VideoConstructorProperties,
-  VideoPlainProperties,
-} from './video';
+import { Entity } from '../entity';
+import { Video } from '../video';
+import { UpdateUserProperties } from './interfaces/update-user-properties';
+import { UserConstructorProperties } from './interfaces/user-constructor-properties';
+import { UserPlainProperties } from './interfaces/user-plain-properties';
+import { UserProperties } from './interfaces/user-properties';
 
-export type UserProperties = {
-  name: string;
-  email: string;
-  password: string;
-  photo?: string;
-  isActive: boolean;
-  videos?: Video[];
-  createdAt: Date;
-};
-
-export type UserPlainProperties = UserProperties & {
-  id: string;
-  videos?: VideoPlainProperties[];
-};
-
-export type UserConstructorProperties = Omit<
-  UserProperties,
-  'id' | 'createdAt' | 'isActive' | 'videos'
-> & {
-  id?: string;
-  videos?: VideoConstructorProperties[];
-  createdAt?: Date;
-  isActive?: boolean;
-};
-
-export type UpdateUserProperties = {
-  name?: string;
-  password?: string;
-  photo?: string;
-};
-
-export class User extends Entity<User> {
-  public readonly props: UserProperties;
-
+export class User extends Entity<UserProperties> {
   constructor(props: UserConstructorProperties) {
     const entityProperties = {
       ...props,
@@ -50,9 +17,7 @@ export class User extends Entity<User> {
       videos: props.videos ? props.videos.map(video => new Video(video)) : [],
       createdAt: props.createdAt ?? convertZonedTimeToUtc(new Date()),
     };
-    delete entityProperties.id;
-    super(props.id);
-    this.props = entityProperties;
+    super(entityProperties);
   }
 
   public update(props: UpdateUserProperties): void {

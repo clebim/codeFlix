@@ -1,4 +1,4 @@
-import { VideoPlainProperties } from '@entities/video';
+import { VideoPlainProperties } from '@entities/video/interfaces/video-plain-properties';
 import { InvalidDataError } from '@usecases/errors/invalid-data-error';
 import { Either } from '@usecases/helpers/either';
 import { RequestValidator } from '@usecases/port/request-validator';

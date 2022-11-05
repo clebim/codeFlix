@@ -1,4 +1,5 @@
-import { User, UserConstructorProperties } from '@entities/user';
+import { User } from '@entities/user/index';
+import { UserConstructorProperties } from '@entities/user/interfaces/user-constructor-properties';
 import { changeValuesMock } from '@tests/helper/mock-helper.mock';
 import faker from 'faker';
 
@@ -7,7 +8,6 @@ export const makeUserMock = (
   replaceInsideListObject = false,
 ) => {
   const body: UserConstructorProperties = {
-    id: faker.datatype.uuid(),
     email: faker.internet.email(),
     password: faker.datatype.string(),
     photo: faker.datatype.string(),

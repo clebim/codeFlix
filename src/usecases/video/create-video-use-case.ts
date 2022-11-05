@@ -1,4 +1,5 @@
-import { Video, VideoPlainProperties } from '@entities/video';
+import { Video } from '@entities/video';
+import { VideoPlainProperties } from '@entities/video/interfaces/video-plain-properties';
 import { UserRepository } from '@usecases/account/port/user-repository';
 import { CategoryRepository } from '@usecases/category/port/category-repository';
 import { InvalidDataError } from '@usecases/errors/invalid-data-error';
@@ -55,8 +56,10 @@ export class CreateVideoUseCase extends UseCase<
         return this.left(new InvalidDataError(invalidFields));
       }
 
+      const { categoriesId, ...rest } = request;
+
       const user = await this.userRepository.getUniqueBy({
-        id: request.userId,
+        id: rest.userId,
       });
 
       if (!user) {
@@ -65,19 +68,17 @@ export class CreateVideoUseCase extends UseCase<
 
       let categories = [];
 
-      if (request.categoriesId) {
+      if (categoriesId) {
         categories = await this.categoryRepository
           .listCategory({
-            id: request.categoriesId,
+            id: categoriesId,
             isActive: true,
           })
           .then(data => data.map(category => category.toDTO()));
       }
 
-      delete request.categoriesId;
-
       const newVideo = new Video({
-        ...request,
+        ...rest,
         categories,
         user: user.toDTO(),
       });

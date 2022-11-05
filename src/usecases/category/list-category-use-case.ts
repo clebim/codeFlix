@@ -1,4 +1,4 @@
-import { CategoryProperties } from '@entities/category';
+import { CategoryProperties } from '@entities/category/interfaces/category-properties';
 import { InvalidDataError } from '@usecases/errors/invalid-data-error';
 import { Either } from '@usecases/helpers/either';
 import { RequestValidator } from '@usecases/port/request-validator';

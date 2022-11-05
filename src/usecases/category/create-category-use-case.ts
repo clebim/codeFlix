@@ -1,4 +1,5 @@
-import { Category, CategoryProperties } from '@entities/category';
+import { Category } from '@entities/category';
+import { CategoryProperties } from '@entities/category/interfaces/category-properties';
 import { CategoryAlreadyExistsError } from '@usecases/errors/category/category-already-exists-error';
 import { InvalidDataError } from '@usecases/errors/invalid-data-error';
 import { Either } from '@usecases/helpers/either';

@@ -1,4 +1,5 @@
-import { Video, VideoConstructorProperties } from '@entities/video';
+import { Video } from '@entities/video';
+import { VideoConstructorProperties } from '@entities/video/interfaces/video-constructor-properties';
 import { changeValuesMock } from '@tests/helper/mock-helper.mock';
 
 import { makeVideoMock } from './video.mock';

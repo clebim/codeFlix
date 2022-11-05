@@ -1,4 +1,5 @@
-import { User, UserPlainProperties } from '@entities/user';
+import { User } from '@entities/user/index';
+import { UserPlainProperties } from '@entities/user/interfaces/user-plain-properties';
 import { InvalidDataError } from '@usecases/errors/invalid-data-error';
 import { UserAlreadyExistsError } from '@usecases/errors/user/user-already-exists-error';
 import { Either } from '@usecases/helpers/either';

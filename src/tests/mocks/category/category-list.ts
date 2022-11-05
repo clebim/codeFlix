@@ -1,4 +1,5 @@
-import { Category, CategoryProperties } from '@entities/category';
+import { Category } from '@entities/category';
+import { CategoryProperties } from '@entities/category/interfaces/category-properties';
 import { changeValuesMock } from '@tests/helper/mock-helper.mock';
 
 import { makeCategoryMock } from './category';

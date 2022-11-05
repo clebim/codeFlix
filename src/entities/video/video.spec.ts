@@ -1,8 +1,9 @@
 import { makeUserMock } from '@tests/mocks/user/user.mock';
 import faker from 'faker';
 
-import { Category } from './category';
-import { Video, VideoConstructorProperties } from './video';
+import { Category } from '../category';
+import { Video } from './index';
+import { VideoConstructorProperties } from './interfaces/video-constructor-properties';
 
 describe('Video Tests', () => {
   it('Test Constructor of Video', () => {

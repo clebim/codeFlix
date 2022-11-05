@@ -2,31 +2,12 @@ import { Entity } from '@entities/entity';
 
 import { convertZonedTimeToUtc } from '@shared/domain/zoned-time-to-utc';
 
-export type CategoryProperties = {
-  name: string;
-  isActive?: boolean;
-  description?: string;
-  createdAt: Date;
-};
+import { CategoryConstructorProperties } from './interfaces/category-constructor-properties';
+import { CategoryPlainProperties } from './interfaces/category-plain-properties';
+import { CategoryProperties } from './interfaces/category-properties';
+import { UpdateCategoryProperties } from './interfaces/update-category-properties';
 
-type UpdateCategoryProperties = {
-  name?: string;
-  description?: string;
-};
-
-export type CategoryConstructorProperties = Omit<
-  CategoryProperties,
-  'createdAt'
-> & {
-  id?: string;
-  createdAt?: Date;
-};
-
-export type CategoryPlainProperties = CategoryProperties & { id: string };
-
-export class Category extends Entity<Category> {
-  public readonly props: CategoryProperties;
-
+export class Category extends Entity<CategoryProperties> {
   constructor(props: CategoryConstructorProperties) {
     const entityProperties = {
       ...props,
@@ -34,9 +15,7 @@ export class Category extends Entity<Category> {
       description: props.description ?? null,
       createdAt: props.createdAt ?? convertZonedTimeToUtc(new Date()),
     };
-    delete entityProperties.id;
-    super(props.id);
-    this.props = entityProperties;
+    super(entityProperties);
   }
 
   public update(props: UpdateCategoryProperties): void {

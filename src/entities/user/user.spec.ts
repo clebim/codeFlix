@@ -1,6 +1,7 @@
 import faker from 'faker';
 
-import { User, UserConstructorProperties } from './user';
+import { User } from './index';
+import { UserConstructorProperties } from './interfaces/user-constructor-properties';
 
 describe('User Tests', () => {
   it('Test Constructor of User', () => {

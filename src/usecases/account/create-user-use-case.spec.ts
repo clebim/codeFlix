@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { User } from '@entities/user';
+import { User } from '@entities/user/index';
 import { userRepositoryMock } from '@tests/mocks/repository.mock';
 import { loggerMock } from '@tests/mocks/service.mock';
 import { makeCreateUserMock } from '@tests/mocks/user/create-user.mock';
